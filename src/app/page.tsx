@@ -74,33 +74,34 @@ export default function LandingPage() {
           <div className="mt-8 flex items-center gap-6">
             {/* Substitua pelos ícones reais */}
             <div className="flex items-center gap-2">
-              <img src="/certificado.svg" alt="Certificado" className="h-8" />
-              <span className="text-[#1B2B4B] font-semibold">3600+ Alunos Certificados</span>
+              <img src="/images/instituicao.svg" alt="Certificado" className="h-8" />
+              <span className="text-[#1B2B4B] font-semibold">3600+ Alunos ativos</span>
             </div>
             <div className="flex items-center gap-2">
-              <img src="/instituicao.svg" alt="Instituição" className="h-8" />
-              <span className="text-[#1B2B4B] font-semibold">200+ Instituições</span>
+              <img src="/images/certificado.svg" alt="Certificado" className="h-8" />
+              <span className="text-[#1B2B4B] font-semibold">200+ Cursos e treinamentos</span>
             </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Substitua pelos logos reais */}
+            <img src="/images/inst1.svg" alt="Instituição 1" className="w-15 h-15" />
+            <img src="/images/inst2.svg" alt="Instituição 2" className="w-15 h-15" />
+            <img src="/images/inst3.svg" alt="Instituição 3" className="w-15 h-15" />
+            <img src="/images/inst4.svg" alt="Instituição 4" className="w-15 h-15" />
+            <img src="/images/inst5.svg" alt="Instituição 5" className="w-15 h-15" />
+            <img src="/images/inst6.svg" alt="Instituição 6" className="w-15 h-15" />
+            <span className="text-[#4B587C] font-semibold text-xl">+50 grandes instituições</span>
           </div>
         </div>
         {/* Imagem principal */}
         <div className="flex-1 flex justify-center">
-          <img src="/hero-woman.png" alt="Profissional" className="rounded-full w-80 h-80 object-cover border-8 border-[#EAF2FF]" />
+          <img src="/images/hero-woman.svg" alt="Profissional" className="rounded-full w-150 h-150 object-cover border-8 border-[#EAF2FF]" />
         </div>
       </section>
 
       {/* Instituições */}
-      <section className="max-w-7xl mx-auto py-6 px-6">
-        <div className="flex flex-wrap items-center gap-8 justify-center">
-          {/* Substitua pelos logos reais */}
-          <img src="/inst1.svg" alt="Instituição 1" className="h-8" />
-          <img src="/inst2.svg" alt="Instituição 2" className="h-8" />
-          <img src="/inst3.svg" alt="Instituição 3" className="h-8" />
-          <img src="/inst4.svg" alt="Instituição 4" className="h-8" />
-          <img src="/inst5.svg" alt="Instituição 5" className="h-8" />
-          <img src="/inst6.svg" alt="Instituição 6" className="h-8" />
-          <span className="text-[#4B587C] font-medium">+50 grandes instituições</span>
-        </div>
+      <section className="max-w-7xl py-6 px-6">
+
       </section>
 
       {/* Cursos em alta */}
@@ -111,7 +112,7 @@ export default function LandingPage() {
           {/* Card de curso */}
           {[1,2,3,4,5,6].map((i) => (
             <div key={i} className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3">
-              <img src={`/curso${i}.jpg`} alt={`Curso ${i}`} className="rounded-lg h-36 w-full object-cover" />
+              <img src={`/images/curso.svg`} alt={`Curso ${i}`} className="rounded-lg h-36 w-full object-cover" />
               <h3 className="font-semibold text-[#1B2B4B]">Nome do Curso {i}</h3>
               <span className="text-[#6C63FF] text-xs font-medium">Categoria</span>
               <div className="flex items-center gap-2">
@@ -153,7 +154,7 @@ export default function LandingPage() {
       {/* Por que aprender com a Berkana */}
       <section className="max-w-7xl mx-auto py-12 px-6 flex flex-col md:flex-row items-center gap-10">
         <div className="flex-1 flex justify-center">
-          <img src="/professor.png" alt="Instrutor" className="rounded-full w-64 h-64 object-cover border-8 border-[#EAF2FF]" />
+          <img src="/images/professor.svg" alt="Instrutor" className="rounded-full w-100 h-100 object-cover border-8 border-[#EAF2FF]" />
         </div>
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-[#1B2B4B] mb-4">Uma plataforma feita para o seu crescimento</h2>
@@ -174,7 +175,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
           {[1,2,3,4,5,6,7,8,9].map((i) => (
             <div key={i} className="bg-white rounded-2xl shadow p-6 flex flex-col gap-2 items-center">
-              <img src={`/instrutor${i}.jpg`} alt={`Instrutor ${i}`} className="rounded-full w-20 h-20 object-cover mb-2" />
+              <img src={`/images/instrutor.svg`} alt={`Instrutor ${i}`} className="rounded-full w-20 h-20 object-cover mb-2" />
               <span className="font-semibold text-[#1B2B4B]">Nome do Instrutor {i}</span>
               <span className="text-[#4B587C] text-sm">Especialidade</span>
               <button className="mt-2 px-4 py-2 rounded bg-[#B6E13B] text-[#1B2B4B] font-semibold hover:bg-[#A0C92B]">Conheça</button>
@@ -223,7 +224,7 @@ export default function LandingPage() {
 
       {/* Call to action final */}
       <section className="max-w-7xl mx-auto py-12 px-6 flex flex-col items-center">
-        <img src="/cta-woman.png" alt="Mulher" className="rounded-full w-40 h-40 object-cover border-8 border-[#EAF2FF] mb-6" />
+        <img src="/images/cta-woman.svg" alt="Mulher" className="rounded-full w-100 h-100 object-cover border-8 border-[#EAF2FF] mb-6" />
         <h2 className="text-2xl font-bold text-[#1B2B4B] mb-4">Comece a construir sua carreira!</h2>
         <p className="text-[#4B587C] text-center max-w-2xl mb-6">
           Dê o próximo passo na sua jornada profissional com a Berkana Academy. Inscreva-se agora e tenha acesso a cursos de alta qualidade, instrutores renomados e uma comunidade que apoia o seu crescimento.
