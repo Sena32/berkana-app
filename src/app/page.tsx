@@ -99,14 +99,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Instituições */}
-      <section className="max-w-7xl py-6 px-6">
-
-      </section>
-
       {/* Cursos em alta */}
       <section className="max-w-7xl mx-auto py-12 px-6">
-        <h2 className="text-2xl font-bold text-[#1B2B4B] mb-2">Capacitações em alta:</h2>
+        <h2 className="text-2xl md:text-4xl font-bold text-[#1B2B4B] mb-2">Capacitações em alta:</h2>
         <p className="text-[#4B587C] mb-8">Escolha o seu próximo curso</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Card de curso */}
@@ -114,11 +109,42 @@ export default function LandingPage() {
             <div key={i} className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3">
               <img src={`/images/curso.svg`} alt={`Curso ${i}`} className="rounded-lg h-36 w-full object-cover" />
               <h3 className="font-semibold text-[#1B2B4B]">Nome do Curso {i}</h3>
-              <span className="text-[#6C63FF] text-xs font-medium">Categoria</span>
-              <div className="flex items-center gap-2">
+              <span className="text-[#04A4F4] text-xs font-medium">Categoria</span>
+              <div className="flex items-center gap-2 justify-between">
+                <span className="text-[#9C9CA4] text-xs">Privado</span>
                 {/* Estrelas */}
-                <span className="text-yellow-400">★★★★★</span>
-                <span className="text-[#4B587C] text-xs">(4.9)</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-yellow-400">★</span>
+                  <span className="text-[#4B587C] text-xs">4.9</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 justify-between">
+                <div className="flex items-center gap-1">
+                  <span className="text-[#9C9CA4]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  </span>
+                  <span className="text-[#4B587C] text-xs">SENASP</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[#9C9CA4]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                  </svg>
+                  </span>
+                  <span className="text-[#4B587C] text-xs">5 Módulos</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-[#9C9CA4]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  </span>
+                  <span className="text-[#4B587C] text-xs">1h 30m</span>
+                </div>
               </div>
               <button className="mt-2 px-4 py-2 rounded bg-[#B6E13B] text-[#1B2B4B] font-semibold hover:bg-[#A0C92B]">Ver detalhes</button>
             </div>
