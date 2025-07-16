@@ -15,6 +15,7 @@
     "@fullcalendar/list": "^6.1.17",
     "@fullcalendar/react": "^6.1.17",
     "@fullcalendar/timegrid": "^6.1.17",
+    "@hookform/resolvers": "^5.1.1",
     "@tailwindcss/forms": "^0.5.10",
     "apexcharts": "^4.7.0",
     "flatpickr": "^4.6.13",
@@ -27,8 +28,10 @@
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.8",
     "react-flatpickr": "^4.0.10",
+    "react-hook-form": "^7.60.0",
     "swiper": "^11.2.6",
-    "tailwind-merge": "^3.3.0"
+    "tailwind-merge": "^3.3.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

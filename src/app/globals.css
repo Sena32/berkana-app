@@ -1,26 +1,165 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Tokens globais inspirados no berkana-ui, adaptados para berkana-app */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #171717;
+    --font-outfit: outfit, sans-serif;
+    --font-jakarta: "Plus Jakarta Sans", Helvetica, sans-serif;
+
+    /* Breakpoints */
+    --breakpoint-2xsm: 375px;
+    --breakpoint-xsm: 425px;
+    --breakpoint-3xl: 2000px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Cores principais (ajuste conforme identidade visual do berkana-app) */
+    --color-current: currentColor;
+    --color-transparent: transparent;
+    --color-white: #ffffff;
+    --color-black: #171717;
+
+    --color-brand-50: #f0f4ff;
+    --color-brand-100: #dbeafe;
+    --color-brand-200: #bfdbfe;
+    --color-brand-300: #93c5fd;
+    --color-brand-400: #60a5fa;
+    --color-brand-500: #2563eb; /* azul principal berkana-app */
+    --color-brand-600: #1d4ed8;
+    --color-brand-700: #1e40af;
+    --color-brand-800: #1e3a8a;
+    --color-brand-900: #172554;
+    --color-title-section: #34364A;
+
+    --color-gray-25: #fcfcfd;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+
+    --color-success-500: #12b76a;
+    --color-error-500: #f04438;
+    --color-warning-500: #f79009;
+
+    --color-berkana-green: #B5D334;
+    --color-berkana-green-dark: #A0BC2C;
+    --color-berkana-green-light: #E3F2A7;
+
+    /* Shadows */
+    --shadow-theme-md: 0px 4px 8px -2px rgba(16, 24, 40, 0.1), 0px 2px 4px -2px rgba(16, 24, 40, 0.06);
+    --shadow-theme-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+    --shadow-theme-sm: 0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+    --shadow-theme-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    --shadow-theme-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+
+    /* Z-index */
+    --z-index-1: 1;
+    --z-index-9: 9;
+    --z-index-99: 99;
+    --z-index-999: 999;
+    --z-index-9999: 9999;
+    --z-index-99999: 99999;
+    --z-index-999999: 999999;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #0a0a0a;
+      --foreground: #ededed;
+      --color-white: #ededed;
+      --color-black: #0a0a0a;
+    }
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-jakarta);
+  }
+
+  /* Botões */
+  button {
+    @apply px-4 py-2 rounded-lg font-semibold transition-colors duration-200;
+  }
+  .btn-primary {
+    @apply bg-[color:var(--color-berkana-green)] text-black font-bold rounded-lg hover:bg-[color:var(--color-berkana-green-dark)] disabled:bg-[color:var(--color-berkana-green-light)] disabled:text-gray-400 disabled:opacity-70;
+    box-shadow: var(--shadow-theme-xs);
+  }
+  .btn-outline {
+    @apply bg-white text-[color:var(--color-brand-500)] border border-[color:var(--color-brand-300)] hover:bg-[color:var(--color-brand-50)] disabled:bg-gray-100 disabled:text-gray-400;
+  }
+  .btn-danger {
+    @apply bg-[color:var(--color-error-500)] text-white hover:bg-[color:var(--color-error-600)] disabled:bg-[color:var(--color-error-100)] disabled:text-gray-400;
+  }
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700 disabled:bg-green-200 disabled:text-gray-400;
+  }
+  button:disabled {
+    @apply cursor-not-allowed;
+  }
+
+  /* Inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="time"],
+  input[type="color"],
+  select,
+  textarea {
+    @apply w-full px-4 py-2 h-12 text-base border border-gray-300 rounded-lg bg-white text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--color-berkana-green)] focus:border-[color:var(--color-berkana-green)] transition;
+  }
+  input:disabled {
+    @apply bg-gray-100 text-gray-400 cursor-not-allowed;
+  }
+  .input-error {
+    @apply border-[color:var(--color-error-500)] focus:ring-[color:var(--color-error-500)] text-[color:var(--color-error-800)];
+  }
+  .input-success {
+    @apply border-green-500 focus:ring-green-500 text-green-600;
+  }
+  .error-message {
+    @apply mt-1.5 text-xs text-[color:var(--color-error-500)];
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .shadow-theme-xs {
+    box-shadow: var(--shadow-theme-xs);
+  }
+  .shadow-theme-sm {
+    box-shadow: var(--shadow-theme-sm);
+  }
+  .shadow-theme-md {
+    box-shadow: var(--shadow-theme-md);
+  }
+  .shadow-theme-lg {
+    box-shadow: var(--shadow-theme-lg);
+  }
+  .shadow-theme-xl {
+    box-shadow: var(--shadow-theme-xl);
+  }
+  .text-title-section {
+    color: var(--color-title-section);
+    font-weight: 700;
+  }
 }
