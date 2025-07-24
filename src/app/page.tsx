@@ -24,6 +24,7 @@ async function getCoursesSafe() {
     const courses = await CourseViewModel.getInstance().listCourses(1);
     return { courses: courses?.courses || [], error: null };
   } catch (error: any) {
+    console.error('Erro ao carregar cursos na home:', error);
     return { courses: [], error: error?.message || 'Erro ao carregar cursos. Tente novamente mais tarde.' };
   }
 }
@@ -35,13 +36,6 @@ export default async function HomePage() {
     <main className="min-h-screen flex flex-col bg-background">
       <PublicHeader />
       {/* Exibe erro amigável se houver */}
-      {error && (
-        <Alert
-          variant="error"
-          message={error}
-          className="max-w-xl mx-auto"
-        />
-      )}
       <HeroSection />
       <PartnersSection />
       <CoursesSection courses={courses} />

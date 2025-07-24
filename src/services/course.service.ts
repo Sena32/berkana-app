@@ -28,7 +28,7 @@ export class CourseService {
     try {
       const params: any = { page };
       if (name) params.name = name;
-      return await apiService.get<any>('/courses', params, headers);
+      return await apiService.get<any>('/course', params, headers);
     } catch (error) {
       throw error;
     }
@@ -36,7 +36,7 @@ export class CourseService {
 
   public static async getCourseById(id: string, headers?: any): Promise<{ data: any, headers: Headers }> {
     try {
-      return await apiService.get<any>(`/courses/${id}`, {}, headers);
+      return await apiService.get<any>(`/course/${id}`, {}, headers);
     } catch (error) {
       throw error;
     }
@@ -44,7 +44,7 @@ export class CourseService {
 
   public static async createCourse(data: any, headers?: any): Promise<{ data: any, headers: Headers }> {
     try {
-      return await apiService.post<any>('/courses', data, headers);
+      return await apiService.post<any>('/course', data, headers);
     } catch (error) {
       throw error;
     }
@@ -52,7 +52,7 @@ export class CourseService {
 
   public static async updateCourse(id: string, data: any, headers?: any): Promise<{ data: any, headers: Headers }> {
     try {
-      return await apiService.patch<any>(`/courses/${id}`, data, headers);
+      return await apiService.patch<any>(`/course/${id}`, data, headers);
     } catch (error) {
       throw error;
     }
@@ -60,7 +60,7 @@ export class CourseService {
 
   public static async deleteCourse(id: string, headers?: any): Promise<{ data: any, headers: Headers }> {
     try {
-      return await apiService.delete<any>(`/courses/${id}`, headers);
+      return await apiService.delete<any>(`/course/${id}`, headers);
     } catch (error) {
       throw error;
     }
