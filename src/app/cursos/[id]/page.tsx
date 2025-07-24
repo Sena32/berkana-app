@@ -1,5 +1,5 @@
 import PublicHeader from '@/components/layout/PublicHeader';
-import CourseHero from '@/components/course/CourseHero';
+// import CourseHero from '@/components/course/CourseHero';
 import Tabs from '@/components/common/Tabs';
 import CourseProgram, { CourseModule } from '@/components/course/CourseProgram';
 import CourseList from '@/components/course/CourseList';
@@ -15,7 +15,7 @@ const modules: CourseModule[] = [
 ];
 
 export const metadata = {
-  title: `${course.title} | Berkana Academy`,
+  title: `${course.name} | Berkana Academy`,
   description: course.description,
 };
 
@@ -24,7 +24,7 @@ export default function CourseDetailPage() {
     <main className="min-h-screen flex flex-col bg-background">
       <PublicHeader />
       <section className="max-w-5xl mx-auto w-full py-10 px-4 sm:px-8">
-        <CourseHero {...course} />
+        {/* <CourseHero title={course.name} duration={course.hours} status={course.isActive ? 'open' : 'locked'} image={course.image} institution={course.institution} modules={course.modules} rating={course.rating} description={course.description} /> */}
         <Tabs
           tabs={[
             {
