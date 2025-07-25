@@ -24,7 +24,16 @@ const CourseCard: React.FC<CourseCardProps> = ({
   return (
     <div className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3">
       {/* Imagem */}
-      <img src={imgSrc} alt={`Curso ${name}`} className="rounded-lg h-36 w-full object-cover" />
+      <div className="relative w-full h-36">
+        <Image
+          src={imgSrc}
+          alt={`Curso ${name}`}
+          fill
+          className="rounded-lg object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={false}
+        />
+      </div>
       {/* Título */}
       <h3 className="font-semibold text-[#141522]">{name}</h3>
       {/* Categoria */}
