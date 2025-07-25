@@ -37,7 +37,7 @@ export default function CoursesClient() {
     setError(null);
     try {
       // const res = await fetch(`/api/course${name?.length>3?`?name=${encodeURIComponent(name)}`:""}`);
-      const nameParam = name && name.length > 3 ? `?name=${encodeURIComponent(name)}` : "";
+      const nameParam = name && name.length > 3 ? `?name=${name}` : "";
       const res = await CourseViewModel.getInstance().listCourses(1, nameParam);
       setCourses(res?.courses || []);
     } catch (err: any) {
@@ -62,7 +62,7 @@ export default function CoursesClient() {
   }, []);
 
   return (
-    <main className="min-h-screen flex flex-col bg-background">
+    <main className="min-h-screen flex flex-col ">
       <PublicHeader />
       <section className="max-w-7xl mx-auto w-full py-10 px-4 sm:px-8">
         <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-2">Explorar cursos</h1>

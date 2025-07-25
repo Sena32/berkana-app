@@ -23,7 +23,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTab = 0 }) => {
             key={tab.label}
             className={`px-4 py-2 text-sm font-medium whitespace-nowrap rounded-t transition-colors ${
               active === idx
-                ? 'text-primary border-b-2 border-primary bg-background'
+                ? 'text-primary border-b-2 border-primary '
                 : 'text-text-secondary hover:text-primary'
             }`}
             onClick={() => setActive(idx)}

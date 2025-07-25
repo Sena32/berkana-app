@@ -33,7 +33,7 @@ export default async function HomePage() {
   const { courses, error } = await getCoursesSafe();
 
   return (
-    <main className="min-h-screen flex flex-col bg-background">
+    <main className="min-h-screen flex flex-col ">
       <PublicHeader />
       {/* Exibe erro amigável se houver */}
       <HeroSection />

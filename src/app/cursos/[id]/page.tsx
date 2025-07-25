@@ -21,7 +21,7 @@ export const metadata = {
 
 export default function CourseDetailPage() {
   return (
-    <main className="min-h-screen flex flex-col bg-background">
+    <main className="min-h-screen flex flex-col ">
       <PublicHeader />
       <section className="max-w-5xl mx-auto w-full py-10 px-4 sm:px-8">
         {/* <CourseHero title={course.name} duration={course.hours} status={course.isActive ? 'open' : 'locked'} image={course.image} institution={course.institution} modules={course.modules} rating={course.rating} description={course.description} /> */}

@@ -26,7 +26,7 @@ export const metadata = {
 
 export default function StudentCourseDetailPage() {
   return (
-    <main className="min-h-screen flex flex-col bg-background">
+    <main className="min-h-screen flex flex-col ">
       <div className="max-w-7xl mx-auto w-full py-8 px-4 sm:px-8 flex flex-col md:flex-row gap-8">
         <div className="md:w-72 w-full">
           <CourseModulesSidebar modules={modules} current={1} />

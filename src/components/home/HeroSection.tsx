@@ -21,11 +21,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   headline = 'Desenvolva suas habilidades.\nCresça na sua carreira.',
   subtitle = 'Capacitação de qualidade para servidores e colaboradores. Aprenda no seu ritmo com cursos abertos e exclusivos, credenciados por instituições públicas e privadas.',
   ctaLabel = 'Explorar cursos',
-  ctaHref = '#cursos',
+  ctaHref = '/cursos',
   imageSrc = '/images/hero-woman.svg'
 }) => {
   return (
-    <section className="w-full bg-background pt-8 pb-6 px-4 sm:pt-12 sm:pb-10 sm:px-8 md:pt-16 md:pb-16 flex flex-col md:flex-row items-center justify-between gap-12 md:gap-20">
+    <section className="w-full  pt-8 pb-6 px-4 sm:pt-12 sm:pb-10 sm:px-8 md:pt-16 md:pb-16 flex flex-col md:flex-row items-center justify-between gap-12 md:gap-20">
       {/* Texto */}
       <div className="flex-1 flex flex-col items-start max-w-xl gap-4 md:gap-6">
       <span className="text-[#2447F9] font-normal text-sm">#CrescimentoProfissional</span>

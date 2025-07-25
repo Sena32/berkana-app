@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-background border-t border-border pt-10 pb-6 px-4 sm:px-8 mt-12">
+    <footer className="w-full  border-t border-border pt-10 pb-6 px-4 sm:px-8 mt-12">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16">
         {/* Coluna institucional */}
         <div className="flex-1 min-w-[220px] mb-6 md:mb-0">

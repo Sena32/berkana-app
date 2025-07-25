@@ -4,7 +4,7 @@ import StudentSidebar from '@/components/layout/StudentSidebar';
 
 const ConfiguracoesPage: React.FC = () => {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen ">
       <div className="hidden md:block">
         <StudentSidebar />
       </div>

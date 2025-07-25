@@ -16,7 +16,7 @@ export const metadata = {
 
 export default function AgendaPage() {
   return (
-    <main className="min-h-screen flex flex-col bg-background">
+    <main className="min-h-screen flex flex-col ">
       <div className="flex min-h-screen">
         <StudentSidebar />
         <div className="flex-1 flex flex-col">
