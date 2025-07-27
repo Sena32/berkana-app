@@ -37,7 +37,7 @@ export default function CoursesClient() {
     setError(null);
     try {
       // const res = await fetch(`/api/course${name?.length>3?`?name=${encodeURIComponent(name)}`:""}`);
-      const nameParam = name && name.length > 3 ? `?name=${name}` : "";
+      const nameParam = name && name.length > 3 ? name: "";
       const res = await CourseViewModel.getInstance().listCourses(1, nameParam);
       setCourses(res?.courses || []);
     } catch (err: any) {

@@ -74,14 +74,14 @@
     --z-index-999999: 999999;
   }
 
-  @media (prefers-color-scheme: dark) {
+  /* @media (prefers-color-scheme: dark) {
     :root {
       --background: #0a0a0a;
       --foreground: #ededed;
       --color-white: #ededed;
       --color-black: #0a0a0a;
     }
-  }
+  } */
 
   body {
     background: var(--background);
