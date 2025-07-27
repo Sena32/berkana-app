@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import CourseFilters from "./CourseFilters";
 import CourseList from "./CourseList";
+import CourseListSkeleton from "./CourseListSkeleton";
 import PublicHeader from "@/components/layout/PublicHeader";
 import Footer from "@/components/layout/Footer";
 import TestimonialsCarousel from "@/components/home/TestimonialsCarousel";
@@ -36,7 +37,6 @@ export default function CoursesClient() {
     setLoading(true);
     setError(null);
     try {
-      // const res = await fetch(`/api/course${name?.length>3?`?name=${encodeURIComponent(name)}`:""}`);
       const nameParam = name && name.length > 3 ? name: "";
       const res = await CourseViewModel.getInstance().listCourses(1, nameParam);
       setCourses(res?.courses || []);
@@ -68,10 +68,13 @@ export default function CoursesClient() {
         <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-2">Explorar cursos</h1>
         <p className="text-text-secondary text-base mb-6">Busque cursos por área, instituição ou palavra-chave.</p>
         <CourseFilters onChangeSearch={setSearch} />
+        
         {loading ? (
-          <div className="text-center py-10">Carregando...</div>
+          <CourseListSkeleton count={6} />
         ) : error ? (
-          <div className="max-w-md mx-auto"><Alert message={error} variant="error" /></div>
+          <div className="max-w-md mx-auto">
+            <Alert message={error} variant="error" />
+          </div>
         ) : (
           <CourseList courses={courses} />
         )}
