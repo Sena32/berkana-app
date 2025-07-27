@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ["https://berkana-api-site.onrender.com"], // Adicione aqui o domínio da sua API de imagens
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "berkana-api.onrender.com",
+      },
+    ],
   }
 };
 

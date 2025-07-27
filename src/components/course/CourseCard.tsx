@@ -20,7 +20,7 @@ const fallbackImage = '/images/curso.svg';
 const CourseCard: React.FC<CourseCardProps> = ({
   id, name, institution, modules, hours, rating, isActive, thumbnail, image, description
 }) => {
-  const imgSrc = image && image !== '' ? image : fallbackImage;
+  const imgSrc = thumbnail && thumbnail !== '' ? `${process.env.NEXT_PUBLIC_API_URL}/${thumbnail}` : fallbackImage;
   return (
     <div className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3">
       {/* Imagem */}
@@ -28,6 +28,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
         <Image
           src={imgSrc}
           alt={`Curso ${name}`}
+          unoptimized={true}
           fill
           className="rounded-lg object-cover"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
