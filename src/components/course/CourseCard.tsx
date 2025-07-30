@@ -20,7 +20,7 @@ const fallbackImage = '/images/curso.svg';
 const CourseCard: React.FC<CourseCardProps> = ({
   id, name, institution, modules, hours, rating, isActive, thumbnail, image, description
 }) => {
-  const imgSrc = thumbnail && thumbnail !== '' ? `${process.env.NEXT_PUBLIC_API_URL}/${thumbnail}` : fallbackImage;
+  const imgSrc = thumbnail && thumbnail !== '' ? `${process.env.NEXT_PUBLIC_API_URL_ADMIN}/upload/courses/thumbnail/${thumbnail}` : fallbackImage;
   return (
     <div className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3">
       {/* Imagem */}
