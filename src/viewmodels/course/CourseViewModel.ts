@@ -1,4 +1,5 @@
 import { CourseService } from '@/services/course.service';
+import { Course, ListCoursesResponse } from '@/types/course';
 
 export class CourseViewModel {
   private static instance: CourseViewModel;
@@ -12,47 +13,100 @@ export class CourseViewModel {
     return CourseViewModel.instance;
   }
 
-  async listCourses(page: number = 1, name?: string): Promise<any> {
+  async listPublicCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
     try {
-      const { data } = await CourseService.listCourses(page, name);
+      const { data } = await CourseService.listPublicCourses(page, name);
       return data;
     } catch (error: any) {
+      console.log('listPublicCourses Error: ', error);
       throw new Error(error.message || 'Erro ao listar cursos');
     }
   }
 
-  async getCourseById(id: string): Promise<any> {
+ /**
+   * Lista cursos com paginação
+   */
+ async listCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
+  try {
+    let url = `/api/course?page=${page}`;
+    if (name) {
+      url += `&name=${encodeURIComponent(name)}`;
+    }
+    const response = await fetch(url);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+    return response.json();
+  } catch (error: any) {
+    console.log('listCourses Error: ', error);
+    throw new Error(error.message || 'Erro ao listar cursos');
+  }
+}
+
+/**
+ * Busca curso por ID
+ */
+async getCourseById(id: string): Promise<Course> {
+  try {
+    const response = await fetch(`/api/course/${id}`);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message);
+    }
+    return response.json();
+  } catch (error: any) {
+    throw new Error(error.message || 'Erro ao buscar curso');
+  }
+}
+
+  /**
+     * Lista modulos do curso
+     */
+  async listCourseModules(courseId: string): Promise<ListCoursesResponse> {
     try {
-      const { data } = await CourseService.getCourseById(id);
-      return data;
+      let url = `/api/student/courses/${courseId}/modules`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
-      throw new Error(error.message || 'Erro ao buscar curso');
+      console.log('listCourseModules Error: ', error);
+      throw new Error(error.message || 'Erro ao listar modulos do curso');
     }
   }
 
-  async createCourse(courseData: any): Promise<any> {
+  /**
+     * Lista videos do modulo
+     */
+  async listModuleVideos(moduleId: string): Promise<ListCoursesResponse> {
     try {
-      const { data } = await CourseService.createCourse(courseData);
-      return data;
+      let url = `/api/student/courses/modules/${moduleId}/videos`;
+      const response = await fetch(url);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
-      throw new Error(error.message || 'Erro ao criar curso');
+      console.log('listModuleVideos Error: ', error);
+      throw new Error(error.message || 'Erro ao listar videos do modulo');
     }
   }
 
-  async editCourse(id: string, courseData: any): Promise<any> {
+  async completeModule(moduleId: string): Promise<any> {
     try {
-      const { data } = await CourseService.updateCourse(id, courseData);
-      return data;
+      const response = await fetch(`/api/module-progress/modules/${moduleId}/complete`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
-      throw new Error(error.message || 'Erro ao editar curso');
+      throw new Error(error.message || 'Erro ao completar modulo');
     }
   }
 
-  async deleteCourse(id: string): Promise<void> {
-    try {
-      await CourseService.deleteCourse(id);
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao deletar curso');
-    }
-  }
 } 

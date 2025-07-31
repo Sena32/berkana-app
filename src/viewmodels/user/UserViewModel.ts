@@ -1,4 +1,5 @@
 import { UserService } from '@/services/user.service';
+import { CreateUserDto, ListUsersResponse, User } from '@/types/user';
 
 export class UserViewModel {
   private static instance: UserViewModel;
@@ -12,25 +13,36 @@ export class UserViewModel {
     return UserViewModel.instance;
   }
 
-  async listUsers(page: number = 1): Promise<any> {
+  async listPublicUsers(page: number = 1): Promise<ListUsersResponse> {
     try {
-      const { data } = await UserService.listUsers(page);
+      const { data } = await UserService.listPublicUsers(page);
       return data;
     } catch (error: any) {
       throw new Error(error.message || 'Erro ao listar usuários');
     }
   }
 
-  async getUserById(id: string): Promise<any> {
+
+  /**
+   * Busca usuário por ID
+   */
+  async getUserById(id: string): Promise<User> {
     try {
-      const { data } = await UserService.getUserById(id);
-      return data;
+      const response = await fetch(`/api/user/${id}`);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
       throw new Error(error.message || 'Erro ao buscar usuário');
     }
   }
 
-  async createUser(userData: any): Promise<any> {
+  /**
+   * Cria um novo usuário
+   */
+  async createPublicUser(userData: CreateUserDto): Promise<User> {
     try {
       const { data } = await UserService.createUser(userData);
       return data;
@@ -39,39 +51,25 @@ export class UserViewModel {
     }
   }
 
-  async editUser(id: string, userData: any): Promise<any> {
+  /**
+   * Edita um usuário existente
+   */
+  async editUser(id: string, userData: Partial<CreateUserDto>): Promise<User> {
     try {
-      const { data } = await UserService.editUser(id, userData);
-      return data;
+      const response = await fetch(`/api/user/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
       throw new Error(error.message || 'Erro ao editar usuário');
-    }
-  }
-
-  async uploadAvatar(id: string, file: File): Promise<any> {
-    try {
-      const { data } = await UserService.uploadAvatar(id, file);
-      return data;
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao fazer upload do avatar');
-    }
-  }
-
-  async adminGeneratePassword(id: string): Promise<any> {
-    try {
-      const { data } = await UserService.adminGeneratePassword(id);
-      return data;
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao gerar senha');
-    }
-  }
-
-  async firstAccessPassword(data: any): Promise<any> {
-    try {
-      const { data: resp } = await UserService.firstAccessPassword(data);
-      return resp;
-    } catch (error: any) {
-      throw new Error(error.message || 'Erro ao alterar senha');
     }
   }
 } 

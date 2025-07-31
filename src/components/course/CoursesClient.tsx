@@ -11,19 +11,8 @@ import Button from '@/components/common/Button';
 import Alert from '@/components/common/Alert';
 import { CourseViewModel } from "@/viewmodels/course/CourseViewModel";
 import { useDebounce } from "@/hooks/useDebounce";
+import { Course } from "@/types/course";
 
-interface Course {
-  id: string;
-  name: string;
-  institution: string;
-  modules?: number;
-  hours: string;
-  rating?: number;
-  isActive: boolean;
-  thumbnail: string;
-  image: string;
-  description: string;
-}
 
 export default function CoursesClient() {
   const [search, setSearch] = useState("");
@@ -38,7 +27,7 @@ export default function CoursesClient() {
     setError(null);
     try {
       const nameParam = name && name.length > 3 ? name: "";
-      const res = await CourseViewModel.getInstance().listCourses(1, nameParam);
+      const res = await CourseViewModel.getInstance().listPublicCourses(1, nameParam);
       setCourses(res?.courses || []);
     } catch (err: any) {
       console.error('Erro ao carregar cursos na página de cursos:', err);

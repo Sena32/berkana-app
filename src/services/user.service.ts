@@ -1,14 +1,12 @@
 import { HttpClient } from './http-client/http-client';
 import { HttpService } from './http-client/http-client.service';
-import { authInterceptor, requestLogger, responseLogger } from './http-client/interceptors';
-// import { CreateUserDto, ListUsersResponse, User, FirstAccessPasswordDto } from '@/types/user'; // Definir tipos no próximo módulo
+import { requestLogger, responseLogger } from './http-client/interceptors';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 const client = new HttpClient(API_URL);
-// Interceptors podem ser ativados conforme integração real
-// client.addRequestInterceptor(authInterceptor);
-// client.addRequestInterceptor(requestLogger);
-// client.addResponseInterceptor(responseLogger);
+
+client.addRequestInterceptor(requestLogger);
+client.addResponseInterceptor(responseLogger);
 
 const apiService = new HttpService(client);
 
@@ -24,7 +22,7 @@ export class UserService {
     return UserService.instance;
   }
 
-  public static async listUsers(page: number, headers?: any): Promise<{ data: any, headers: Headers }> {
+  public static async listPublicUsers(page: number, headers?: any): Promise<{ data: any, headers: Headers }> {
     try {
       return await apiService.get<any>('/user', { page }, headers);
     } catch (error) {

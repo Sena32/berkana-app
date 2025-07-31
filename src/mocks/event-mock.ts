@@ -1,6 +1,6 @@
-import type { EventCardProps } from '@/components/event/EventCard';
+import { Event } from '@/types/event';
 
-export const mockEvents: EventCardProps[] = [
+export const mockEvents: Event[] = [
   {
     title: 'Aulão ao vivo Licitações',
     date: '25 de março',
@@ -8,6 +8,8 @@ export const mockEvents: EventCardProps[] = [
     description: 'Material será enviado por e-mail após o evento.',
     status: 'webinário',
     institution: 'SENASP',
+    provider: 'SENASP',
+    id: '1',
   },
   {
     title: 'Gestão de Segurança',
@@ -16,6 +18,8 @@ export const mockEvents: EventCardProps[] = [
     description: 'Webinário sobre gestão de segurança pública.',
     status: 'em breve',
     institution: 'SENASP',
+    provider: 'SENASP',
+    id: '2',
   },
   {
     title: 'Combate à Corrupção: Gestão de Riscos',
@@ -24,5 +28,7 @@ export const mockEvents: EventCardProps[] = [
     description: 'Evento especial para alunos credenciados.',
     status: 'em breve',
     institution: 'Berkana',
+    provider: 'Berkana',
+    id: '3',
   },
 ]; 

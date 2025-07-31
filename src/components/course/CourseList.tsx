@@ -1,16 +1,116 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import CourseCard, { CourseCardProps } from './CourseCard';
+import CourseCardWithProgress, { CourseCardWithProgressProps } from './CourseCardWithProgress';
+
+export type CardType = 'default' | 'withProgress';
 
 interface CourseListProps {
-  courses: CourseCardProps[];
+  courses: (CourseCardProps | CourseCardWithProgressProps)[];
+  title?: string;
+  showPagination?: boolean;
+  cardType?: CardType;
+  className?: string;
+  itemsPerPage?: number;
 }
 
-const CourseList: React.FC<CourseListProps> = ({ courses }) => {
+const CourseList: React.FC<CourseListProps> = ({ 
+  courses, 
+  title, 
+  showPagination = false, 
+  cardType = 'default',
+  className = '',
+  itemsPerPage = 3
+}) => {
+  const [currentPage, setCurrentPage] = useState(0); // Paginação inicial
+  const totalPages = Math.ceil(courses.length / itemsPerPage);
+  
+  const startIndex = currentPage * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentCourses = courses.slice(startIndex, endIndex);
+
+  const handlePrevious = () => {
+    setCurrentPage(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
+  };
+
+  const renderCard = (course: CourseCardProps | CourseCardWithProgressProps, index: number) => {
+    if (cardType === 'withProgress') {
+      return (
+        <CourseCardWithProgress 
+          key={course.id} 
+          {...(course as CourseCardWithProgressProps)} 
+        />
+      );
+    }
+    
+    return (
+      <CourseCard 
+        key={course.id} 
+        {...(course as CourseCardProps)} 
+      />
+    );
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {courses.map((course) => (
-        <CourseCard key={course.id} {...course} />
-      ))}
+    <div className={`space-y-4 ${className}`}>
+      {/* Header com título e paginação */}
+      {(title || showPagination) && (
+        <div className="flex items-center justify-between">
+          {title && (
+            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+          )}
+          
+          {showPagination && totalPages > 1 && (
+            <div className="flex gap-2">
+              <button 
+                onClick={handlePrevious}
+                disabled={currentPage === 0}
+                className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Página anterior"
+              >
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button 
+                onClick={handleNext}
+                disabled={currentPage === totalPages - 1}
+                className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                aria-label="Próxima página"
+              >
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Grid de cards */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-${itemsPerPage} gap-4`}>
+        {currentCourses.map((course, index) => renderCard(course, index))}
+      </div>
+
+      {/* Indicadores de página (opcional) */}
+      {showPagination && totalPages > 1 && (
+        <div className="flex justify-center gap-2 mt-4">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index)}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                index === currentPage ? 'bg-[#B5D334]' : 'bg-gray-300'
+              }`}
+              aria-label={`Ir para página ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

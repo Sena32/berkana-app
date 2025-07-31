@@ -21,7 +21,7 @@ export const metadata = {
 // Função utilitária para buscar cursos com tratamento de erro
 async function getCoursesSafe() {
   try {
-    const courses = await CourseViewModel.getInstance().listCourses(1);
+    const courses = await CourseViewModel.getInstance().listPublicCourses(1);
     return { courses: courses?.courses || [], error: null };
   } catch (error: any) {
     console.error('Erro ao carregar cursos na home:', error);

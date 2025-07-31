@@ -5,9 +5,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginSchema } from "@/validations/auth/login-schema";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 const LoginForm: React.FC = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -18,8 +28,22 @@ const LoginForm: React.FC = () => {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    // Aqui iria a chamada real de login
-    alert("Login mockado com sucesso!\n" + JSON.stringify(data, null, 2));
+    // e.preventDefault();
+    setIsLoading(true);
+    // setError("");
+    try {
+      const result = await login(data.email, data.password);
+      if (result?.error) {
+        // setError(result.error);
+        return;
+      }
+      router.push("/aluno");
+    } catch (error) {
+      // setError("Erro ao fazer login");
+      console.error("Erro no login:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -50,15 +74,15 @@ const LoginForm: React.FC = () => {
         />
         <button
           type="button"
-          className="absolute right-3 top-9 text-gray-400 hover:text-[#B5D334]"
+          className="absolute right-3 top-6 text-gray-400 hover:text-[#B5D334]"
           tabIndex={-1}
           onClick={() => setShowPassword((v) => !v)}
           aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
         >
           {showPassword ? (
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.657.403-3.22 1.125-4.575M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <EyeIcon className="h-6 w-6 text-gray-700" />
           ) : (
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm2.828-2.828A9.969 9.969 0 0122 12c0 5.523-4.477 10-10 10S2 17.523 2 12c0-2.21.896-4.21 2.343-5.657" /></svg>
+            <EyeSlashIcon className="h-6 w-6 text-gray-700" />
           )}
         </button>
       </label>

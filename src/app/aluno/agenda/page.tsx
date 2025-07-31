@@ -2,6 +2,7 @@ import StudentSidebar from '@/components/layout/StudentSidebar';
 import EventCard from '@/components/event/EventCard';
 import { mockEvents } from '@/mocks/event-mock';
 import Footer from '@/components/layout/Footer';
+import EventList from '@/components/event/EventList';
 
 const mockFilters = [
   { id: 'all', name: 'Todos' },
@@ -33,19 +34,20 @@ export default function AgendaPage() {
             </div>
             <section className="mb-10">
               <h2 className="text-lg font-semibold text-text-primary mb-4">Seus próximos eventos</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {mockEvents.slice(0, 2).map((event) => (
-                  <EventCard key={event.title} {...event} />
-                ))}
-              </div>
+              <EventList 
+                events={mockEvents}
+                title="Seus próximos eventos"
+                showViewAll={false}
+                showExploreButton={false}
+              />
             </section>
             <section className="mb-10">
-              <h2 className="text-lg font-semibold text-text-primary mb-4">Em breve</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {mockEvents.slice(1).map((event) => (
-                  <EventCard key={event.title} {...event} />
-                ))}
-              </div>
+              <EventList 
+                events={mockEvents}
+                title="Em breve" 
+                showViewAll={false}
+                showExploreButton={false}
+              />
             </section>
           </div>
           <Footer />
