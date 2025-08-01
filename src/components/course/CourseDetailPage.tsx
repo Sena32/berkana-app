@@ -6,6 +6,14 @@ import CourseOverview from './CourseOverview';
 import CourseTabs from './CourseTabs';
 import CourseProgressSidebar from './CourseProgressSidebar';
 
+// Importar a interface Module do CourseProgressSidebar
+interface Module {
+  id: number;
+  title: string;
+  status: 'completed' | 'current' | 'pending';
+  duration: string;
+}
+
 const CourseDetailPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -31,7 +39,7 @@ const CourseDetailPage: React.FC = () => {
     }
   };
 
-  const modules = [
+  const modules: Module[] = [
     { id: 1, title: 'Introdução', status: 'completed', duration: '10:00' },
     { id: 2, title: 'Módulo 1 - Lorem ipsum dolor', status: 'current', duration: '10:00' },
     { id: 3, title: 'Módulo 2 - Lorem ipsum', status: 'pending', duration: '10:00' },
