@@ -1,63 +1,52 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSidebar } from '@/context/SidebarContext';
 import Image from 'next/image';
+import { BookOpenIcon, CalendarIcon, ChatBubbleLeftEllipsisIcon, Cog6ToothIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 const menuItems = [
   { 
-    label: 'Meu aprendizado', 
+    label: 'Início', 
     href: '/aluno', 
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    )
+    icon: <HomeIcon className="w-6 h-6" />
   },
   { 
     label: 'Cursos', 
-    href: '/aluno/cursos', 
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    )
+    href: '/aluno/cursos',
+    hasSubmenu: true,
+    subItems: [
+      { label: 'Meus cursos', href: '/aluno/meus-cursos' },
+      { label: 'Explorar cursos', href: '/aluno/explorar-cursos' }
+    ],
+    icon: <BookOpenIcon className="w-6 h-6" />
   },
   { 
     label: 'Agenda e Eventos', 
     href: '/aluno/agenda', 
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-    )
+    icon: <CalendarIcon className="w-6 h-6" />
   },
   { 
     label: 'Suporte', 
     href: '/aluno/suporte', 
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M12 2.25a9.75 9.75 0 109.75 9.75A9.75 9.75 0 0012 2.25z" />
-      </svg>
-    )
+    icon: <ChatBubbleLeftEllipsisIcon className="w-6 h-6" />
   },
   { 
     label: 'Configurações', 
     href: '/aluno/configuracoes', 
-    icon: (
-      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    )
+    icon: <Cog6ToothIcon className="w-6 h-6" />
   },
 ];
 
 const StudentSidebar: React.FC = () => {
   const pathname = usePathname();
   const { isExpanded, isMobileOpen, toggleMobileSidebar } = useSidebar();
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
+  const isActive = (href: string) => pathname === href;
+  const isSubmenuActive = (subItems: any[]) => subItems.some(item => isActive(item.href));
 
   return (
     <>
@@ -78,9 +67,11 @@ const StudentSidebar: React.FC = () => {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <Link href='/' aria-label="Página inicial Berkana Academy" className="flex items-center">
-              <Image src="/images/brand/berkana_logo.svg" alt="Berkana Academy" className="h-8 w-auto" width={100} height={100} />
-            </Link>
+            <div className="flex items-center">
+              <a href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Página inicial Berkana Academy">
+                <Image src="/images/brand/berkana_logo.svg" alt="Berkana Academy" className="h-10 w-auto" width={100} height={100} />
+              </a>
+            </div>
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
               onClick={toggleMobileSidebar}
@@ -95,22 +86,77 @@ const StudentSidebar: React.FC = () => {
           <nav className="flex-1 p-4">
             <ul className="space-y-2">
               {menuItems.map((item) => {
-                const isActive = pathname === item.href;
+                const active = isActive(item.href) || (item.hasSubmenu && isSubmenuActive(item.subItems || []));
+                const submenuOpen = openSubmenu === item.label;
+                
                 return (
                   <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`
-                        flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                        ${isActive 
-                          ? 'bg-[#B5D334] text-[#16285E]' 
-                          : 'text-gray-700 hover:bg-gray-100'
-                        }
-                      `}
-                    >
-                      <span className="flex-shrink-0">{item.icon}</span>
-                      {isExpanded && <span>{item.label}</span>}
-                    </Link>
+                    {item.hasSubmenu ? (
+                      <div>
+                        <button
+                          onClick={() => setOpenSubmenu(submenuOpen ? null : item.label)}
+                          className={`
+                            flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                            ${active 
+                              ? 'bg-[#B5D334] text-[#16285E]' 
+                              : 'text-gray-700 hover:bg-gray-100'
+                            }
+                          `}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="flex-shrink-0">{item.icon}</span>
+                            {<span>{item.label}</span>}
+                          </div>
+                          {(
+                            <svg 
+                              width="16" 
+                              height="16" 
+                              fill="none" 
+                              viewBox="0 0 24 24" 
+                              stroke="currentColor"
+                              className={`transition-transform ${submenuOpen ? 'rotate-180' : ''}`}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          )}
+                        </button>
+                        
+                        {submenuOpen && item.subItems && (
+                          <ul className="ml-6 mt-2 space-y-1">
+                            {item.subItems.map((subItem) => (
+                              <li key={subItem.href}>
+                                <Link
+                                  href={subItem.href}
+                                  className={`
+                                    block px-3 py-2 rounded-lg text-sm transition-colors
+                                    ${isActive(subItem.href)
+                                      ? 'bg-[#B5D334] text-[#16285E]' 
+                                      : 'text-gray-600 hover:bg-gray-100'
+                                    }
+                                  `}
+                                >
+                                  {subItem.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={`
+                          flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                          ${active 
+                            ? 'bg-[#B5D334] text-[#16285E]' 
+                            : 'text-gray-700 hover:bg-gray-100'
+                          }
+                        `}
+                      >
+                        <span className="flex-shrink-0">{item.icon}</span>
+                        {<span>{item.label}</span>}
+                      </Link>
+                    )}
                   </li>
                 );
               })}

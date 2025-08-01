@@ -100,6 +100,8 @@ const authOptions: AuthOptions = {
           }
         });
 
+        console.log('Refresh Token Response: ', res);
+
         const setCookie = res.headers.get('set-cookie');
         if (!res.ok || !setCookie) {
           delete token.accessToken;
@@ -116,6 +118,7 @@ const authOptions: AuthOptions = {
         token.accessTokenExpires = Date.now() + 15 * 60 * 1000;
         return token;
       } catch (error) {
+        console.log('Refresh Token Error: ', error);
         token.error = "RefreshAccessTokenError";
         delete token.accessToken;
         delete token.refreshToken;

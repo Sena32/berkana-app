@@ -8,6 +8,7 @@ import EventList from '@/components/event/EventList';
 import { Event } from '@/types/event';
 import { Course } from '@/types/course';
 import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
+import { useCourseNavigation } from '@/hooks/useCourseNavigation';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -116,6 +117,10 @@ const StudentDashboard: React.FC = () => {
             showPagination={true}
             cardType="withProgress"
             itemsPerPage={2}
+            navigation={useCourseNavigation({
+              baseUrl: '/aluno/cursos',
+              useRouter: true,
+            })}
           />
 
       </div>
@@ -136,6 +141,10 @@ const StudentDashboard: React.FC = () => {
           courses={recommendedCourses}
           title="Cursos para você"
           cardType="default"
+          navigation={useCourseNavigation({
+            baseUrl: '/aluno/cursos',
+            useRouter: true,
+          })}
         />
 
         {/* Cursos gratuitos */}
@@ -144,6 +153,10 @@ const StudentDashboard: React.FC = () => {
             title="Cursos gratuitos"
             showPagination={true}
             cardType="default"
+            navigation={useCourseNavigation({
+              baseUrl: '/aluno/cursos',
+              useRouter: true,
+            })}
           />
       </div>
     </div>

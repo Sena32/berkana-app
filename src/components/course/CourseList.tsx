@@ -5,6 +5,13 @@ import CourseCardWithProgress, { CourseCardWithProgressProps } from './CourseCar
 
 export type CardType = 'default' | 'withProgress';
 
+export interface NavigationConfig {
+  enabled: boolean;
+  baseUrl?: string;
+  useRouter?: boolean;
+  onClick?: (id: string) => void;
+}
+
 interface CourseListProps {
   courses: (CourseCardProps | CourseCardWithProgressProps)[];
   title?: string;
@@ -12,6 +19,8 @@ interface CourseListProps {
   cardType?: CardType;
   className?: string;
   itemsPerPage?: number;
+  // Props de navegação
+  navigation?: NavigationConfig;
 }
 
 const CourseList: React.FC<CourseListProps> = ({ 
@@ -20,9 +29,10 @@ const CourseList: React.FC<CourseListProps> = ({
   showPagination = false, 
   cardType = 'default',
   className = '',
-  itemsPerPage = 3
+  itemsPerPage = 3,
+  navigation
 }) => {
-  const [currentPage, setCurrentPage] = useState(0); // Paginação inicial
+  const [currentPage, setCurrentPage] = useState(0);
   const totalPages = Math.ceil(courses.length / itemsPerPage);
   
   const startIndex = currentPage * itemsPerPage;
@@ -42,7 +52,8 @@ const CourseList: React.FC<CourseListProps> = ({
       return (
         <CourseCardWithProgress 
           key={course.id} 
-          {...(course as CourseCardWithProgressProps)} 
+          {...(course as CourseCardWithProgressProps)}
+          navigation={navigation}
         />
       );
     }
@@ -50,7 +61,8 @@ const CourseList: React.FC<CourseListProps> = ({
     return (
       <CourseCard 
         key={course.id} 
-        {...(course as CourseCardProps)} 
+        {...(course as CourseCardProps)}
+        navigation={navigation}
       />
     );
   };

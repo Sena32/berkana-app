@@ -34,7 +34,7 @@ const StudentHeader: React.FC = () => {
           </button>
 
           {/* Navigation links */}
-          <nav className="hidden md:flex items-center gap-6">
+          {/* <nav className="hidden md:flex items-center gap-6">
             {navigationItems.map((item) => (
               <Link
                 key={item.href}
@@ -50,7 +50,7 @@ const StudentHeader: React.FC = () => {
                 {item.label}
               </Link>
             ))}
-          </nav>
+          </nav> */}
         </div>
 
         {/* Right side - Search, notifications, user */}
