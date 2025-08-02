@@ -13,26 +13,31 @@ export class CourseViewModel {
     return CourseViewModel.instance;
   }
 
-  async listPublicCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
-    try {
-      const { data } = await CourseService.listPublicCourses(page, name);
-      return data;
-    } catch (error: any) {
-      console.log('listPublicCourses Error: ', error);
-      throw new Error(error.message || 'Erro ao listar cursos');
-    }
-  }
+  // async listPublicCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
+  //   try {
+  //     const { data } = await CourseService.listPublicCourses(page, name);
+  //     return data;
+  //   } catch (error: any) {
+  //     console.log('listPublicCourses Error: ', error);
+  //     throw new Error(error.message || 'Erro ao listar cursos');
+  //   }
+  // }
 
  /**
    * Lista cursos com paginação
    */
- async listCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
+ async listPublicCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
   try {
     let url = `/api/course?page=${page}`;
     if (name) {
       url += `&name=${encodeURIComponent(name)}`;
     }
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'method': 'GET',
+        'isPublic': 'true',
+      },
+    });
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message);

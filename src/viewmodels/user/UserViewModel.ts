@@ -13,10 +13,23 @@ export class UserViewModel {
     return UserViewModel.instance;
   }
 
-  async listPublicUsers(page: number = 1): Promise<ListUsersResponse> {
+  async listPublicUsers(page: number = 1, searchTerm: string = ''): Promise<ListUsersResponse> {
     try {
-      const { data } = await UserService.listPublicUsers(page);
-      return data;
+      const params = new URLSearchParams({
+        page: String(page),
+        search: searchTerm,
+      });
+      const response = await fetch(`/api/user?${params.toString()}`, {
+        headers: {
+          'method': 'GET',
+          'isPublic': 'true',
+        },
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
       throw new Error(error.message || 'Erro ao listar usuários');
     }
@@ -39,13 +52,22 @@ export class UserViewModel {
     }
   }
 
-  /**
-   * Cria um novo usuário
-   */
+
   async createPublicUser(userData: CreateUserDto): Promise<User> {
     try {
-      const { data } = await UserService.createUser(userData);
-      return data;
+      const response = await fetch(`/api/user`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'isPublic': 'true',
+        },
+        body: JSON.stringify(userData),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      return response.json();
     } catch (error: any) {
       throw new Error(error.message || 'Erro ao criar usuário');
     }

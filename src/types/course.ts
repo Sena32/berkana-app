@@ -1,3 +1,8 @@
+export enum CourseLevel {
+  GRATUITO = 'GRATUITO',
+  PAGO = 'PAGO',
+}
+
 export type Course = {
   id: string;
   name: string;
@@ -6,9 +11,13 @@ export type Course = {
   hours: string;
   rating?: number;
   isActive: boolean;
+  isPublic: boolean;
   thumbnail: string;
   image: string;
   description: string;
+  createdAt: string;
+  updatedAt: string;
+  level: CourseLevel;
 };
 
 export interface ListCoursesResponse {

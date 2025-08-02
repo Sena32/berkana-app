@@ -11,7 +11,7 @@ interface Module {
 interface CourseData {
   title: string;
   rating: number;
-  progress: {
+  progress?: {
     completed: number;
     total: number;
     percentage: number;
@@ -72,24 +72,26 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({ course, m
       </div>
 
       {/* Barra de progresso */}
-      <div>
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>{course.progress.completed}/{course.progress.total} Módulos</span>
-          <span>{course.progress.percentage}%</span>
+      {course.progress && (
+        <div>
+          <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <span>{course.progress.completed}/{course.progress.total} Módulos</span>
+            <span>{course.progress.percentage}%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              className="bg-[#B5D334] h-2 rounded-full transition-all duration-300" 
+              style={{ width: `${course.progress.percentage}%` }}
+            ></div>
+          </div>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className="bg-[#B5D334] h-2 rounded-full transition-all duration-300" 
-            style={{ width: `${course.progress.percentage}%` }}
-          ></div>
-        </div>
-      </div>
+      )}
 
       {/* Lista de módulos */}
       <div>
         <div className="flex justify-between items-center mb-3">
-          <h3 className="font-medium text-gray-900">{course.progress.total} Módulos</h3>
-          <span className="text-sm text-gray-600">{course.progress.completed}/{course.progress.total} Concluídos</span>
+          <h3 className="font-medium text-gray-900">{course.progress?.total || 0} Módulos</h3>
+          <span className="text-sm text-gray-600">{course.progress ? `${course.progress.completed}/${course.progress.total}` : '0/0'} Concluídos</span>
         </div>
         
         <div className="space-y-2">

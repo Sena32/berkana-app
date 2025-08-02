@@ -5,13 +5,14 @@ import CourseCardWithProgress from './CourseCardWithProgress';
 import CourseCard from './CourseCard';
 import { CourseCardProps } from './CourseCard';
 import { CourseCardWithProgressProps } from './CourseCardWithProgress';
+import { CourseWithOptionalProgress } from './CourseList';
 import { useCourseNavigation } from '@/hooks/useCourseNavigation';
 
 const MyCoursesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Dados mockados para cursos em progresso
-  const coursesInProgress: CourseCardWithProgressProps[] = [
+  const coursesInProgress: CourseWithOptionalProgress[] = [
     {
       id: '1',
       name: 'Armamento Munição e Tiro',
@@ -23,7 +24,11 @@ const MyCoursesPage: React.FC = () => {
         percentage: 60
       },
       image: '/images/courses/shooting-range.jpg',
-      progressColor: 'green'
+      progressColor: 'green',
+      hours: '1h 30m',
+      isActive: true,
+      thumbnail: '',
+      description: 'Armamento Munição e Tiro'
     },
     {
       id: '2',
@@ -36,7 +41,11 @@ const MyCoursesPage: React.FC = () => {
         percentage: 20
       },
       image: '/images/courses/transport.jpg',
-      progressColor: 'green'
+      progressColor: 'green',
+      hours: '1h 30m',
+      isActive: true,
+      thumbnail: '',
+      description: 'Fiscalização, Transporte e Direção'
     },
     {
       id: '3',
@@ -49,7 +58,11 @@ const MyCoursesPage: React.FC = () => {
         percentage: 20
       },
       image: '/images/courses/safety.jpg',
-      progressColor: 'green'
+      progressColor: 'green',
+      hours: '1h 30m',
+      isActive: true,
+      thumbnail: '',
+      description: 'Funções, Técnicas e Procedimentos em Segurança...'
     }
   ];
 

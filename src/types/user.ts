@@ -11,8 +11,9 @@ export interface CreateUserDto {
     lastName: string;
     institution: string;
     avatar?: string | null;
-    profile: UserProfile;
     cpf: string;
+    password: string;
+    confirmPassword: string;
 }
   
   

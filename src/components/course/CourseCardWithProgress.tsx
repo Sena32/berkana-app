@@ -9,7 +9,7 @@ export interface CourseCardWithProgressProps {
   name: string;
   institution: string;
   rating: number;
-  progress: {
+  progress?: {
     completed: number;
     total: number;
     percentage: number;
@@ -41,7 +41,7 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
 }) => {
   const router = useRouter();
   const imgSrc = image && image !== '' ? image : fallbackImage;
-  const isCompleted = progress.percentage === 100;
+  const isCompleted = progress?.percentage === 100;
   
   const getProgressColor = () => {
     switch (progressColor) {
@@ -109,18 +109,20 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
         </div>
         
         {/* Progress Bar */}
-        <div className="mb-3">
-          <div className="flex justify-between text-xs text-gray-600 mb-1">
-            <span>{progress.completed}/{progress.total} Módulos</span>
-            <span>{progress.percentage}%</span>
+        {progress && (
+          <div className="mb-3">
+            <div className="flex justify-between text-xs text-gray-600 mb-1">
+              <span>{progress.completed}/{progress.total} Módulos</span>
+              <span>{progress.percentage}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className={`${getProgressColor()} h-2 rounded-full transition-all duration-300`} 
+                style={{ width: `${progress.percentage}%` }}
+              ></div>
+            </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className={`${getProgressColor()} h-2 rounded-full transition-all duration-300`} 
-              style={{ width: `${progress.percentage}%` }}
-            ></div>
-          </div>
-        </div>
+        )}
 
         {/* Link do certificado para cursos concluídos */}
         {isCompleted && certificateLink && (

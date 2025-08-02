@@ -4,8 +4,9 @@ import { extractToken } from '@/lib/extractToken';
 
 export async function GET(request: NextRequest) {
   try {
+    const isPublic = request.headers.get('isPublic');
     const token = extractToken(request);
-    if (!token) {
+    if (!token && !isPublic) {
       return NextResponse.json(
         { message: 'Token de acesso não encontrado' },
         { status: 401 }
@@ -15,8 +16,12 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const page = Number(searchParams.get('page')) || 1;
     const name = searchParams.get('name') || undefined;
-    
-    const courses = await CourseService.listCourses(page, name, { Authorization: `Bearer ${token}` });
+    let courses;
+    if (isPublic) {
+      courses = await CourseService.listPublicCourses(page, name);
+    } else {
+      courses = await CourseService.listCourses(page, name, { Authorization: `Bearer ${token}` });
+    }
     return NextResponse.json(courses.data);
   } catch (error: any) {
     return NextResponse.json(

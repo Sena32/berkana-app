@@ -3,6 +3,18 @@ import React, { useState } from 'react';
 import CourseCard, { CourseCardProps } from './CourseCard';
 import CourseCardWithProgress, { CourseCardWithProgressProps } from './CourseCardWithProgress';
 
+// Tipo para cursos com progresso opcional
+export interface CourseWithOptionalProgress extends Omit<CourseCardProps, 'id'> {
+  id: string;
+  progress?: {
+    completed: number;
+    total: number;
+    percentage: number;
+  };
+  progressColor?: 'green' | 'orange' | 'blue';
+  certificateLink?: string;
+}
+
 export type CardType = 'default' | 'withProgress';
 
 export interface NavigationConfig {
@@ -13,7 +25,7 @@ export interface NavigationConfig {
 }
 
 interface CourseListProps {
-  courses: (CourseCardProps | CourseCardWithProgressProps)[];
+  courses: (CourseCardProps | CourseCardWithProgressProps | CourseWithOptionalProgress)[];
   title?: string;
   showPagination?: boolean;
   cardType?: CardType;
@@ -47,12 +59,23 @@ const CourseList: React.FC<CourseListProps> = ({
     setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
   };
 
-  const renderCard = (course: CourseCardProps | CourseCardWithProgressProps, index: number) => {
+  const renderCard = (course: CourseCardProps | CourseCardWithProgressProps | CourseWithOptionalProgress, index: number) => {
     if (cardType === 'withProgress') {
+      // Se o curso tem progresso, usar CourseCardWithProgress
+      if ('progress' in course && course.progress) {
+        return (
+          <CourseCardWithProgress 
+            key={course.id} 
+            {...(course as CourseCardWithProgressProps)}
+            navigation={navigation}
+          />
+        );
+      }
+      // Se não tem progresso, usar CourseCard normal
       return (
-        <CourseCardWithProgress 
+        <CourseCard 
           key={course.id} 
-          {...(course as CourseCardWithProgressProps)}
+          {...(course as CourseCardProps)}
           navigation={navigation}
         />
       );

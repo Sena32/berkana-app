@@ -16,6 +16,23 @@ const RegisterForm: React.FC = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  // Função para formatar CPF
+  const formatCPF = (value: string) => {
+    // Remove tudo que não é dígito
+    const numbers = value.replace(/\D/g, '');
+    
+    // Aplica a máscara do CPF
+    if (numbers.length <= 3) {
+      return numbers;
+    } else if (numbers.length <= 6) {
+      return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
+    } else if (numbers.length <= 9) {
+      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`;
+    } else {
+      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9, 11)}`;
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -29,19 +46,25 @@ const RegisterForm: React.FC = () => {
   const onSubmit = async (data: RegisterSchema) => {
     setApiError(null);
     try {
+      // Remove formatação do CPF antes de enviar para a API
+      const cleanCPF = data.cpf.replace(/\D/g, '');
+      
       // Adapte conforme o DTO da API
-      await UserViewModel.getInstance().createPublicUser({
+      const viewModel = UserViewModel.getInstance();
+      await viewModel.createPublicUser({
         email: data.email,
         name: data.name,
-        lastName: "", // Adapte se quiser pedir no form
+        lastName: data.lastName, // Agora usando o sobrenome do formulário
         institution: data.institution,
-        profile: UserProfile.ALUNO, // Ou permita escolher
-        cpf: "", // Adapte se quiser pedir no form
+        cpf: cleanCPF, // CPF limpo (apenas números)
+        password: data.password,
+        confirmPassword: data.confirmPassword
       });
       setSuccess(true);
       reset();
       router.push("/cadastro-sucesso");
     } catch (err: any) {
+      console.log('error onSubmit registerForm', err);
       setApiError(err.message || "Erro ao criar usuário");
     }
   };
@@ -67,6 +90,25 @@ const RegisterForm: React.FC = () => {
         {...register("name")}
         error={!!errors.name}
         hint={errors.name?.message}
+      />
+      <InputField
+        type="text"
+        placeholder="Digite seu sobrenome"
+        {...register("lastName")}
+        error={!!errors.lastName}
+        hint={errors.lastName?.message}
+      />
+      <InputField
+        type="text"
+        placeholder="Digite seu CPF"
+        {...register("cpf", {
+          onChange: (e) => {
+            const formatted = formatCPF(e.target.value);
+            e.target.value = formatted;
+          }
+        })}
+        error={!!errors.cpf}
+        hint={errors.cpf?.message}
       />
       <InputField
         type="text"

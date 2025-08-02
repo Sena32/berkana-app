@@ -6,21 +6,24 @@ import CourseList from '@/components/course/CourseList';
 import CourseCardWithProgress from '@/components/course/CourseCardWithProgress';
 import EventList from '@/components/event/EventList';
 import { Event } from '@/types/event';
-import { Course } from '@/types/course';
+import { Course, CourseLevel } from '@/types/course';
+import { CourseWithOptionalProgress } from '@/components/course/CourseList';
 import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
 import { useCourseNavigation } from '@/hooks/useCourseNavigation';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
-  const [coursesInProgress, setCoursesInProgress] = useState<Course[]>([]);
-  const [freeCourses, setFreeCourses] = useState<Course[]>([]);
-  const [recommendedCourses, setRecommendedCourses] = useState<Course[]>([]);
+  const [coursesInProgress, setCoursesInProgress] = useState<CourseWithOptionalProgress[]>([]);
+  const [freeCourses, setFreeCourses] = useState<CourseWithOptionalProgress[]>([]);
+  const [recommendedCourses, setRecommendedCourses] = useState<CourseWithOptionalProgress[]>([]);
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const { courses: coursesData } = await CourseViewModel.getInstance().listCourses(1);
+      const { courses: coursesData } = await CourseViewModel.getInstance().listPublicCourses(1);
+      // TODO: Implementar lógica para filtrar cursos do usuário que estão em andamento
       setCoursesInProgress(coursesData);
-      setFreeCourses(coursesData);
+      setFreeCourses(coursesData.filter(course => course.level === CourseLevel.GRATUITO));
+      // TODO: Implementar lógica para filtrar cursos recomendados
       setRecommendedCourses(coursesData);
     };
     fetchCourses();

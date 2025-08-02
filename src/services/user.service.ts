@@ -40,8 +40,10 @@ export class UserService {
 
   public static async createUser(userData: any, headers?: any): Promise<{ data: any, headers: Headers }> {
     try {
+      console.log('userData createUser service', userData);
       return await apiService.post<any>('/user', userData, headers);
     } catch (error) {
+      console.log('error createUser service', error);
       throw error;
     }
   }

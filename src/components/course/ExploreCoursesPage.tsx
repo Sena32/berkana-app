@@ -5,6 +5,7 @@ import SearchBar from '@/components/common/SearchBar';
 import FilterDropdown from '@/components/common/FilterDropdown';
 import SortDropdown from '@/components/common/SortDropdown';
 import { CourseCardProps } from './CourseCard';
+import { CourseWithOptionalProgress } from './CourseList';
 
 const ExploreCoursesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,7 +13,7 @@ const ExploreCoursesPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('popular');
 
   // Dados mockados dos cursos
-  const courses: CourseCardProps[] = [
+  const courses: CourseWithOptionalProgress[] = [
     {
     id: '1',
     name: 'Inglês Instrumental',

@@ -4,16 +4,21 @@ import { extractToken } from '@/lib/extractToken';
 
 export async function POST(request: NextRequest) {
   try {
+    const isPublic = request.headers.get('isPublic');
     const token = extractToken(request);
-    if (!token) {
+    if (!token && !isPublic) {
       return NextResponse.json(
         { message: 'Token de acesso não encontrado' },
         { status: 401 }
       );
     }
-
     const body = await request.json();
-    const user = await UserService.createUser(body, { Authorization: `Bearer ${token}` });
+    let user;
+    if (isPublic) {
+      user = await UserService.createUser(body);
+    } else {
+      user = await UserService.createUser(body, { Authorization: `Bearer ${token}` });
+    }
     return NextResponse.json(user.data, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
