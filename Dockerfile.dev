@@ -1,0 +1,22 @@
+# Dockerfile para desenvolvimento - Berkana Site App
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Instala dependências globais necessárias
+RUN npm install -g @nestjs/cli
+
+# Copia package.json e package-lock.json
+COPY package*.json ./
+
+# Instala todas as dependências (incluindo devDependencies)
+RUN npm install
+
+# Copia o resto do código
+COPY . .
+
+# Expõe a porta
+EXPOSE 3001
+
+# Comando para desenvolvimento (será sobrescrito pelo docker-compose)
+CMD ["npm", "run", "dev"] 

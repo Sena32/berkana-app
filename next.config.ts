@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "berkana-api.onrender.com",
+        protocol: "http",
+        hostname: "74.163.99.16"
       },
       {
         protocol: "https",
