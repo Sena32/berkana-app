@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { filename: string } }
+  { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
-    const filename = params.filename;
+    const { filename } = await params;
     const adminUrl = process.env.NEXT_PUBLIC_API_URL_ADMIN || 'http://74.163.99.16';
     
     const imageUrl = `${adminUrl}/upload/courses/thumbnail/${filename}`;
