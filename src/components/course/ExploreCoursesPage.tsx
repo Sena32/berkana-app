@@ -1,138 +1,97 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import CourseList from './CourseList';
 import SearchBar from '@/components/common/SearchBar';
 import FilterDropdown from '@/components/common/FilterDropdown';
 import SortDropdown from '@/components/common/SortDropdown';
-import { CourseCardProps } from './CourseCard';
-import { CourseWithOptionalProgress } from './CourseList';
+import CourseListSkeleton from './CourseListSkeleton';
+import Alert from '@/components/common/Alert';
+import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
+import { useDebounce } from '@/hooks/useDebounce';
+import { Course } from '@/types/course';
 
 const ExploreCoursesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popular');
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Dados mockados dos cursos
-  const courses: CourseWithOptionalProgress[] = [
-    {
-    id: '1',
-    name: 'Inglês Instrumental',
-    institution: 'SENASP',
-    modules: 5,
-    hours: '1h 30m',
-    rating: 4.5,
-    isActive: true,
-    thumbnail: '',
-    image: '/images/courses/english.jpg',
-    description: 'Linguagem de Comunicação',
-    status: 'completed'
-    },
-    {
-    id: '2',
-    name: 'Investigação Criminal - Aspectos Conceituais',
-    institution: 'SENASP',
-    modules: 5,
-    hours: '1h 30m',
-    rating: 4.5,
-    isActive: true,
-    thumbnail: '',
-    image: '/images/courses/criminal-investigation.jpg',
-    description: 'Investigação Criminal',
-    status: 'exclusive'
-    },
-    {
-    id: '3',
-    name: 'Primeiros Socorros no Ambiente Corporativo',
-    institution: 'Berkana',
-    modules: 5,
-    hours: '1h 30m',
-    rating: 4.5,
-    isActive: true,
-    thumbnail: '',
-    image: '/images/courses/first-aid.jpg',
-    description: 'Salvamento e Resgate e Defesa Civil',
-    status: 'in-progress'
-    },
-    {
-      id: '4',
-      name: 'Gestão de Conflitos e Eventos Críticos',
-      institution: 'Berkana',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/conflict-management.jpg',
-      description: 'Gestão de Conflitos e Eventos Críticos'
-    },
-    {
-      id: '5',
-      name: 'Qualidade de Vida, Bem-Estar e Saúde',
-      institution: 'SENASP',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/wellness.jpg',
-      description: 'Qualidade de Vida, Bem-Estar e Saúde'
-    },
-    {
-      id: '6',
-      name: 'Salvamento e Resgate e Defesa Civil',
-      institution: 'Berkana',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/rescue.jpg',
-      description: 'Salvamento e Resgate e Defesa Civil'
-    },
-    {
-      id: '7',
-      name: 'Língua e Comunicação',
-      institution: 'SENASP',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/communication.jpg',
-      description: 'Linguagem de Comunicação'
-    },
-    {
-      id: '8',
-      name: 'Planejamento, Governança e Integridade',
-      institution: 'SENASP',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/governance.jpg',
-      description: 'Planejamento, Governança e Integridade'
-    },
-    {
-      id: '9',
-      name: 'Combate à Corrupção: Gestão de Riscos',
-      institution: 'SENASP',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/corruption-combat.jpg',
-      description: 'Planejamento, Governança e Integridade'
+  const debouncedSearch = useDebounce(searchTerm, 500);
+
+  const fetchCourses = useCallback(async (name: string | null) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const nameParam = name && name.length > 3 ? name : "";
+      const res = await CourseViewModel.getInstance().listPublicCourses(1, nameParam);
+      setCourses(res?.courses || []);
+    } catch (err: any) {
+      console.error('Erro ao carregar cursos na página de exploração:', err);
+      setError("Erro ao carregar cursos. Tente novamente mais tarde.");
+    } finally {
+      setLoading(false);
     }
-  ];
+  }, []);
 
-  // Filtrar cursos baseado no termo de busca
-  const filteredCourses = courses.filter(course => 
-    course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    if (debouncedSearch.length === 0) {
+      fetchCourses(null);
+    }
+    if (debouncedSearch.length > 3) {
+      fetchCourses(debouncedSearch);
+    }
+  }, [debouncedSearch, fetchCourses]);
+
+  useEffect(() => {
+    fetchCourses(null);
+  }, []);
+
+  // Filtrar cursos baseado no termo de busca e categoria
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = 
+      course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory = selectedCategory === 'all' || 
+      (selectedCategory === 'senasp' && course.institution.toLowerCase().includes('senasp')) ||
+      (selectedCategory === 'berkana' && course.institution.toLowerCase().includes('berkana')) ||
+      (selectedCategory === 'language' && course.description.toLowerCase().includes('linguagem')) ||
+      (selectedCategory === 'investigation' && course.description.toLowerCase().includes('investigação')) ||
+      (selectedCategory === 'rescue' && course.description.toLowerCase().includes('resgate')) ||
+      (selectedCategory === 'governance' && course.description.toLowerCase().includes('governança')) ||
+      (selectedCategory === 'wellness' && course.description.toLowerCase().includes('bem-estar'));
+
+    return matchesSearch && matchesCategory;
+  });
+
+  // Ordenar cursos baseado na seleção
+  const sortedCourses = [...filteredCourses].sort((a, b) => {
+    switch (sortBy) {
+      case 'popular':
+        return (b.rating || 0) - (a.rating || 0);
+      case 'recent':
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      case 'rating':
+        return (b.rating || 0) - (a.rating || 0);
+      case 'duration':
+        // Assumindo que hours está no formato "1h 30m"
+        const getHours = (hours: string) => {
+          const match = hours.match(/(\d+)h\s*(\d+)?m?/);
+          if (match) {
+            const h = parseInt(match[1]);
+            const m = match[2] ? parseInt(match[2]) : 0;
+            return h + m / 60;
+          }
+          return 0;
+        };
+        return getHours(a.hours) - getHours(b.hours);
+      default:
+        return 0;
+    }
+  });
 
   return (
     <div className="space-y-6">
@@ -182,17 +141,56 @@ const ExploreCoursesPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Estado de loading */}
+      {loading && <CourseListSkeleton count={9} />}
+
+      {/* Estado de erro */}
+      {error && (
+        <div className="max-w-md mx-auto">
+          <Alert message={error} variant="error" />
+        </div>
+      )}
+
       {/* Lista de cursos */}
-      <CourseList 
-        courses={filteredCourses}
-        cardType="default"
-        itemsPerPage={9}
-        showPagination={true}
-        navigation={{
-          enabled: true,
-          baseUrl: "/aluno/cursos"
-        }}
-      />
+      {!loading && !error && (
+        <CourseList 
+          courses={sortedCourses}
+          cardType="default"
+          itemsPerPage={9}
+          showPagination={true}
+          navigation={{
+            enabled: true,
+            baseUrl: "/aluno/cursos"
+          }}
+        />
+      )}
+
+      {/* Estado vazio */}
+      {!loading && !error && sortedCourses.length === 0 && (
+        <div className="text-center py-12">
+          <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto mb-4 text-gray-400">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum curso encontrado</h3>
+          <p className="text-gray-600 mb-4">
+            {searchTerm || selectedCategory !== 'all' 
+              ? 'Tente ajustar sua busca ou filtros para encontrar mais cursos.' 
+              : 'Não há cursos disponíveis no momento. Tente novamente mais tarde.'}
+          </p>
+          {(searchTerm || selectedCategory !== 'all') && (
+            <button
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setSortBy('popular');
+              }}
+              className="inline-flex items-center px-4 py-2 bg-[#B5D334] text-gray-900 font-medium rounded-lg hover:bg-[#A0BC2C] transition-colors"
+            >
+              Limpar filtros
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CourseList from './CourseList';
 import CourseCardWithProgress from './CourseCardWithProgress';
 import CourseCard from './CourseCard';
@@ -7,147 +7,131 @@ import { CourseCardProps } from './CourseCard';
 import { CourseCardWithProgressProps } from './CourseCardWithProgress';
 import { CourseWithOptionalProgress } from './CourseList';
 import { useCourseNavigation } from '@/hooks/useCourseNavigation';
+import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
+import { UserCourseViewModel } from '@/viewmodels/user-course/UserCourseViewModel';
+import { Course, CourseLevel } from '@/types/course';
+import { UserCourse } from '@/services/user-course.service';
+import Input from '../common/InputField';
 
 const MyCoursesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const [coursesInProgress, setCoursesInProgress] = useState<CourseWithOptionalProgress[]>([]);
+  const [recommendedCourses, setRecommendedCourses] = useState<CourseWithOptionalProgress[]>([]);
+  const [completedCourses, setCompletedCourses] = useState<any[]>([]);
 
-  // Dados mockados para cursos em progresso
-  const coursesInProgress: CourseWithOptionalProgress[] = [
-    {
-      id: '1',
-      name: 'Armamento Munição e Tiro',
-      institution: 'SENASP',
-      rating: 4.5,
-      progress: {
-        completed: 3,
-        total: 5,
-        percentage: 60
-      },
-      image: '/images/courses/shooting-range.jpg',
-      progressColor: 'green',
-      hours: '1h 30m',
-      isActive: true,
-      thumbnail: '',
-      description: 'Armamento Munição e Tiro'
-    },
-    {
-      id: '2',
-      name: 'Fiscalização, Transporte e Direção',
-      institution: 'SENASP',
-      rating: 4.5,
-      progress: {
-        completed: 1,
-        total: 5,
-        percentage: 20
-      },
-      image: '/images/courses/transport.jpg',
-      progressColor: 'green',
-      hours: '1h 30m',
-      isActive: true,
-      thumbnail: '',
-      description: 'Fiscalização, Transporte e Direção'
-    },
-    {
-      id: '3',
-      name: 'Funções, Técnicas e Procedimentos em Segurança...',
-      institution: 'SENASP',
-      rating: 4.5,
-      progress: {
-        completed: 1,
-        total: 5,
-        percentage: 20
-      },
-      image: '/images/courses/safety.jpg',
-      progressColor: 'green',
-      hours: '1h 30m',
-      isActive: true,
-      thumbnail: '',
-      description: 'Funções, Técnicas e Procedimentos em Segurança...'
-    }
-  ];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const { courses: coursesData } = await CourseViewModel.getInstance().listPublicCourses(1);
+        // TODO: Implementar lógica para filtrar cursos do usuário que estão em andamento
+        setCoursesInProgress(coursesData);
+        setCompletedCourses(coursesData);
+        // TODO: Implementar lógica para filtrar cursos recomendados
+        setRecommendedCourses(coursesData);
+      } catch (error) {
+        console.error('Erro ao carregar cursos:', error);
+      } finally {
+        setLoading(false);
+      }
 
-  // Dados mockados para cursos recomendados
-  const recommendedCourses: CourseCardProps[] = [
-    {
-      id: '4',
-      name: 'Yoga para iniciantes',
-      institution: 'SENASP',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/yoga.jpg',
-      description: 'Qualidade de Vida, Bem-Estar e Saúde'
-    },
-    {
-      id: '5',
-      name: 'Primeiros Socorros no Ambiente Corporativo',
-      institution: 'Berkana',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/first-aid.jpg',
-      description: 'Salvamento e Resgate e Defesa Civil'
-    },
-    {
-      id: '6',
-      name: 'Gestão de Conflitos e Eventos Críticos',
-      institution: 'Berkana',
-      modules: 5,
-      hours: '1h 30m',
-      rating: 4.5,
-      isActive: true,
-      thumbnail: '',
-      image: '/images/courses/conflict.jpg',
-      description: 'Gestão de Conflitos e Eventos Críticos'
-    }
-  ];
+    };
+    fetchCourses();
+  }, []);
 
-  // Dados mockados para cursos concluídos
-  const completedCourses: CourseCardWithProgressProps[] = [
-    {
-      id: '7',
-      name: 'Armamento Munição e Tiro',
-      institution: 'SENASP',
-      rating: 4.5,
-      progress: {
-        completed: 5,
-        total: 5,
-        percentage: 100
-      },
-      image: '/images/courses/shooting-range.jpg',
-      progressColor: 'green'
-    },
-    {
-      id: '8',
-      name: 'Fiscalização, Transporte e Direção',
-      institution: 'SENASP',
-      rating: 4.5,
-      progress: {
-        completed: 5,
-        total: 5,
-        percentage: 100
-      },
-      image: '/images/courses/transport.jpg',
-      progressColor: 'green'
-    },
-    {
-      id: '9',
-      name: 'Funções, Técnicas e Procedimentos em Segurança...',
-      institution: 'SENASP',
-      rating: 4.5,
-      progress: {
-        completed: 5,
-        total: 5,
-        percentage: 100
-      },
-      image: '/images/courses/safety.jpg',
-      progressColor: 'green'
-    }
-  ];
+  // useEffect(() => {
+  //   const fetchCourses = async () => {
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
+
+  //       // Buscar cursos do usuário (em progresso e concluídos)
+  //       const userCoursesData = await UserCourseViewModel.getInstance().getUserCourses(1);
+        
+  //       // Separar cursos por status
+  //       const inProgress = userCoursesData.courses.filter(course => course.status === 'IN_PROGRESS');
+  //       const completed = userCoursesData.courses.filter(course => course.status === 'COMPLETED');
+
+  //       // Converter para o formato esperado pelos componentes
+  //       const inProgressFormatted: CourseWithOptionalProgress[] = inProgress.map(userCourse => ({
+  //         id: userCourse.course.id,
+  //         name: userCourse.course.name,
+  //         institution: userCourse.course.institution,
+  //         rating: userCourse.course.rating,
+  //         progress: userCourse.progress,
+  //         image: userCourse.course.image,
+  //         progressColor: 'green',
+  //         hours: userCourse.course.hours,
+  //         isActive: userCourse.course.isActive,
+  //         thumbnail: userCourse.course.thumbnail,
+  //         description: userCourse.course.description
+  //       }));
+
+  //       const completedFormatted: CourseCardWithProgressProps[] = completed.map(userCourse => ({
+  //         id: userCourse.course.id,
+  //         name: userCourse.course.name,
+  //         institution: userCourse.course.institution,
+  //         rating: userCourse.course.rating,
+  //         progress: userCourse.progress,
+  //         image: userCourse.course.image,
+  //         progressColor: 'green'
+  //       }));
+
+  //       setCoursesInProgress(inProgressFormatted);
+  //       setCompletedCourses(completedFormatted);
+
+  //       // Buscar cursos recomendados (cursos públicos que o usuário não está matriculado)
+  //       try {
+  //         const recommendedData = await UserCourseViewModel.getInstance().getRecommendedCourses(1);
+  //         const recommendedFormatted: CourseCardProps[] = recommendedData.courses.map((course: Course) => ({
+  //           id: course.id,
+  //           name: course.name,
+  //           institution: course.institution,
+  //           modules: course.modules,
+  //           hours: course.hours,
+  //           rating: course.rating,
+  //           isActive: course.isActive,
+  //           thumbnail: course.thumbnail,
+  //           image: course.image,
+  //           description: course.description
+  //         }));
+  //         setRecommendedCourses(recommendedFormatted);
+  //       } catch (recommendedError) {
+  //         // Se não conseguir buscar cursos recomendados, usar cursos públicos como fallback
+  //         const publicCoursesData = await CourseViewModel.getInstance().listPublicCourses(1);
+  //         const publicFormatted: CourseCardProps[] = publicCoursesData.courses
+  //           .filter((course: Course) => !inProgress.some(uc => uc.courseId === course.id) && !completed.some(uc => uc.courseId === course.id))
+  //           .slice(0, 6)
+  //           .map((course: Course) => ({
+  //             id: course.id,
+  //             name: course.name,
+  //             institution: course.institution,
+  //             modules: course.modules,
+  //             hours: course.hours,
+  //             rating: course.rating,
+  //             isActive: course.isActive,
+  //             thumbnail: course.thumbnail,
+  //             image: course.image,
+  //             description: course.description
+  //           }));
+  //         setRecommendedCourses(publicFormatted);
+  //       }
+
+  //     } catch (err: any) {
+  //       console.error('Erro ao carregar cursos:', err);
+  //       setError(err.message || 'Erro ao carregar cursos. Tente novamente mais tarde.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCourses();
+  // }, []);
 
   // Filtrar cursos baseado no termo de busca
   const filterCourses = (courses: any[]) => {
@@ -162,6 +146,60 @@ const MyCoursesPage: React.FC = () => {
   const filteredInProgress = filterCourses(coursesInProgress);
   const filteredRecommended = filterCourses(recommendedCourses);
   const filteredCompleted = filterCourses(completedCourses);
+
+  if (loading) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Meus cursos</h1>
+          <div className="relative max-w-md">
+            <Input
+              placeholder="Buscar por curso ou instituição"
+              disabled
+              className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg bg-gray-100"
+              name="search"
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="space-y-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-white p-6 rounded-lg border border-gray-200 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+              <div className="space-y-3">
+                <div className="h-32 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Meus cursos</h1>
+        </div>
+        <div className="text-center py-12">
+          <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto mb-4 text-red-400">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Erro ao carregar cursos</h3>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center px-4 py-2 bg-[#B5D334] text-gray-900 font-medium rounded-lg hover:bg-[#A0BC2C] transition-colors"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
