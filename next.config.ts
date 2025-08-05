@@ -1,10 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
   images: {
@@ -18,7 +15,25 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
       },
     ],
-  }
+    // Permitir domínios não seguros para desenvolvimento
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  // Configurar headers para permitir conteúdo misto
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "img-src 'self' data: http: https:;"
+          }
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
