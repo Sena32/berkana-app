@@ -13,15 +13,15 @@ export class CourseViewModel {
     return CourseViewModel.instance;
   }
 
-  // async listPublicCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
-  //   try {
-  //     const { data } = await CourseService.listPublicCourses(page, name);
-  //     return data;
-  //   } catch (error: any) {
-  //     console.log('listPublicCourses Error: ', error);
-  //     throw new Error(error.message || 'Erro ao listar cursos');
-  //   }
-  // }
+  async listHomeCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
+    try {
+      const { data } = await CourseService.listPublicCourses(page, name);
+      return data;
+    } catch (error: any) {
+      console.log('listPublicCourses Error: ', error);
+      throw new Error(error.message || 'Erro ao listar cursos');
+    }
+  }
 
  /**
    * Lista cursos com paginação
