@@ -43,7 +43,11 @@ const CourseCard: React.FC<CourseCardProps> = ({
   status
 }) => {
   const router = useRouter();
-  const imgSrc = thumbnail && thumbnail !== '' ? `${process.env.NEXT_PUBLIC_API_URL_ADMIN}/upload/courses/thumbnail/${thumbnail}` : fallbackImage;
+  
+  // Usar a API route local em vez da URL HTTP direta
+  const imgSrc = thumbnail && thumbnail !== '' 
+    ? `/api/images/courses/thumbnail/${thumbnail}` 
+    : fallbackImage;
 
   const handleClick = () => {
     if (!navigation?.enabled) return;
