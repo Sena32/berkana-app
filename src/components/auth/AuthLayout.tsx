@@ -35,10 +35,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
             />
           </Link>
           <h2 className="text-2xl md:text-3xl font-semibold text-white text-left mb-2" style={{ fontFamily: 'var(--font-jakarta)' }}>
-            Melhore suas habilidades com Berkana Academy!
+            Melhore suas habilidades com a Berkana Academy!
           </h2>
           <p className="text-white/80 text-left text-base md:text-lg max-w-md font-normal">
-            O conhecimento certo abre portas. Aqui, você encontra os cursos que vão impulsionar sua carreira e transformar seu futuro. Pronto para começar?
+            Aprenda com cursos pensados para servidores e colaboradores de instituições públicas e privadas. Ganhe certificações, avance na carreira e conquiste novas oportunidades — tudo no seu ritmo. Cadastre-se e comece hoje mesmo!
           </p>
         </div>
       </div>
