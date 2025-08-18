@@ -131,6 +131,7 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
       }
 
       if (firstModuleId) {
+        console.log('fetchModuleVideos', firstModuleId);
         await fetchModuleVideos(firstModuleId);
       }
     } catch (err: any) {
@@ -139,8 +140,10 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
   };
 
   const fetchModuleVideos = async (moduleId: string) => {
+    console.log('fetchModuleVideos', moduleId);
     try {
       const videosResponse = await CourseViewModel.getInstance().listModuleVideos(moduleId);
+      console.log('videosResponse', videosResponse);
       setModuleVideos(videosResponse);
       
       // Encontrar e definir o módulo atual

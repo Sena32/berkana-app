@@ -98,9 +98,9 @@ async getCourseById(id: string, isPublic: boolean = false): Promise<Course> {
    */
   async listModuleVideos(moduleId: string, isPublic: boolean = false): Promise<CourseModuleVideo[]> {
     try {
-      const response = await fetch(`/api/course-modules/${moduleId}/videos`, {
+      const response = await fetch(`/api/course/${moduleId}/videos`, {
         headers: {
-          'isPublic': isPublic ? 'true' : 'false',
+          'isPublic': isPublic ? 'true' : 'false'
         },
       });
       
@@ -121,7 +121,7 @@ async getCourseById(id: string, isPublic: boolean = false): Promise<Course> {
    */
   async completeModule(moduleId: string): Promise<any> {
     try {
-      const response = await fetch(`/api/module-progress/modules/${moduleId}/complete`, {
+      const response = await fetch(`/api/course/${moduleId}/modules`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

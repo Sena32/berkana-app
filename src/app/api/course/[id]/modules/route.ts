@@ -32,3 +32,27 @@ export async function GET(
     );
   }
 }
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  try {
+    const token = extractToken(request);
+    if (!token) {
+      return NextResponse.json(
+        { message: 'Token de acesso não encontrado' },
+        { status: 401 }
+      );
+    }
+
+    const course = await CourseService.completeModule(id, { Authorization: `Bearer ${token}` });
+    return NextResponse.json(course.data, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error.message || 'Erro ao completar módulo' },
+      { status: error.status || 500 }
+    );
+  }
+}
