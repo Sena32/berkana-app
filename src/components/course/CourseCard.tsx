@@ -3,6 +3,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import TruncatedText from '@/components/ui/TruncatedText';
+import { BookOpenIcon, BuildingOffice2Icon, BuildingOfficeIcon, ClockIcon, StarIcon } from '@heroicons/react/24/outline';
 
 export interface CourseCardProps {
   id: string;
@@ -15,6 +17,9 @@ export interface CourseCardProps {
   thumbnail: string;
   image: string;
   description: string;
+  categoryName: string;
+  modulesCount: number;
+  level: string;
   // Props de navegação
   navigation?: {
     enabled: boolean;
@@ -38,9 +43,12 @@ const CourseCard: React.FC<CourseCardProps> = ({
   isActive, 
   thumbnail, 
   image, 
-  description,
+  description, 
+  categoryName,
+  level,
   navigation,
-  status
+  status,
+  modulesCount
 }) => {
   const router = useRouter();
   
@@ -79,13 +87,17 @@ const CourseCard: React.FC<CourseCardProps> = ({
 
     return (
       <div className={`absolute top-2 left-2 ${config.color} text-white text-xs px-2 py-1 rounded-full`}>
-        {config.label}
+        <TruncatedText
+          text={config.label}
+          className="text-white text-xs"
+          tooltipPosition="top"
+        />
       </div>
     );
   };
 
   const cardContent = (
-    <div className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3 cursor-pointer hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-2xl shadow p-6 flex flex-col gap-3 cursor-pointer hover:shadow-lg transition-shadow min-w-[280px] w-full">
       {/* Imagem com status tag */}
       <div className="relative w-full h-36">
         <Image
@@ -100,48 +112,91 @@ const CourseCard: React.FC<CourseCardProps> = ({
         {getStatusTag()}
       </div>
       
-      {/* Título */}
-      <h3 className="font-semibold text-[#141522]">{name}</h3>
+      {/* Título - truncado */}
+      <div className="flex items-start w-full">
+        <div className="min-w-0 flex-1">
+          <TruncatedText
+            text={name}
+            maxLength={50}
+            className="font-semibold text-[#141522] leading-tight block w-full"
+            tooltipPosition="top"
+          />
+        </div>
+      </div>
       
-      {/* Categoria */}
-      <span className="text-[#04A4F4] text-xs font-medium">{description}</span>
+      {/* Categoria - truncada */}
+      <div className="w-full">
+        <TruncatedText
+          text={categoryName || 'Sem categoria'}
+          maxLength={25}
+          className="text-[#04A4F4] text-xs font-medium w-full"
+          tooltipPosition="top"
+        />
+      </div>
       
       {/* Status, rating e detalhes */}
       <div className="flex items-center gap-2 justify-between">
-        <span className="text-[#9C9CA4] text-xs">{isActive ? 'Ativo' : 'Inativo'}</span>
+        <div className="min-w-0">
+          <TruncatedText
+            text={level}
+            className="text-[#9C9CA4] text-xs w-full"
+            tooltipPosition="top"
+          />
+        </div>
         {/* Estrelas */}
-        <div className="flex items-center gap-1">
-          <span className="text-yellow-400">★</span>
-          <span className="text-[#141522] text-xs">{rating || 'Não avaliado'}</span>
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <span className="text-yellow-400">
+            <StarIcon className="w-4 h-4" fill='currentColor'/>
+          </span>
+          <TruncatedText
+            text={rating ? rating.toString() : 'Não avaliado'}
+            className="text-[#141522] text-xs"
+            tooltipPosition="top"
+          />
         </div>
       </div>
       
       <div className="flex items-center gap-2 justify-between">
-        <div className="flex items-center gap-1">
-          <span className="text-[#141522]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
+        {/* Instituição - truncada */}
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="text-[#141522] flex-shrink-0">
+            <BuildingOffice2Icon className="w-4 h-4" />
           </span>
-          <span className="text-[#4B587C] text-xs">{institution}</span>
+          <div className="min-w-0 flex-1">
+            <TruncatedText
+              text={institution}
+              className="text-[#4B587C] text-xs block w-full"
+              tooltipPosition="top"
+            />
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="text-[#141522]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
+        
+        {/* Módulos */}
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="text-[#141522] flex-shrink-0">
+            <BookOpenIcon className="w-4 h-4" />
           </span>
-          <span className="text-[#4B587C] text-xs">{modules ? `${modules} Modul` : 'Sem Módulos'}</span>
+          <div className="min-w-0 flex-1">
+            <TruncatedText
+              text={modulesCount ? `${modulesCount} Modulos` : 'Sem Módulos'}
+              className="text-[#4B587C] text-xs block w-full"
+              tooltipPosition="top"
+            />
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="text-[#141522]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
+        
+        {/* Horas */}
+        <div className="flex items-center gap-1 min-w-0">
+          <span className="text-[#141522] flex-shrink-0">
+            <ClockIcon className="w-4 h-4" />
           </span>
-          <span className="text-[#4B587C] text-xs">{hours}</span>
+          <div className="min-w-0 flex-1">
+            <TruncatedText
+              text={hours}
+              className="text-[#4B587C] text-xs block w-full"
+              tooltipPosition="top"
+            />
+          </div>
         </div>
       </div>
     </div>

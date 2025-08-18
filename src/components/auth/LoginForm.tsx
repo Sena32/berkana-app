@@ -50,7 +50,7 @@ const LoginForm: React.FC = () => {
     <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)} noValidate>
       <h1 className="text-2xl font-bold text-text-primary mb-2">Entrar</h1>
       <div className="text-sm text-text-secondary mb-2">
-        Novo aqui? <a href="/cadastro" className="text-[#04A4F4] font-semibold hover:underline transition-colors">Crie uma conta</a>
+        Novo aqui? <a href="/cadastro" className="text-[#B5D334] font-semibold hover:underline transition-colors">Crie uma conta</a>
       </div>
       <label className="flex flex-col gap-1">
         <span className="text-sm font-medium text-text-primary">E-mail institucional</span>

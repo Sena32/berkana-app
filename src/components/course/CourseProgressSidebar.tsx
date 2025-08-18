@@ -1,16 +1,33 @@
- 'use client';
-import React from 'react';
+'use client';
+import React, { useCallback } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { CourseModule } from '@/types/course';
 
+// Importar a interface Module
 interface Module {
   id: number;
   title: string;
-  status: 'completed' | 'current' | 'pending';
+  status: 'completed' | 'current' | 'pending' | 'disabled';
   duration: string;
 }
 
-interface CourseData {
+interface CourseDetailData {
+  id: string;
   title: string;
+  institution: string;
+  categoryName: string;
+  students: number;
+  modulesCount: number;
+  duration: string;
   rating: number;
+  reviews: number;
+  status: string;
+  description: string;
+  videoUrl?: string;
+  posterImage: string;
+  thumbnail: string;
+  level: string;
   progress?: {
     completed: number;
     total: number;
@@ -19,11 +36,28 @@ interface CourseData {
 }
 
 interface CourseProgressSidebarProps {
-  course: CourseData;
-  modules: Module[];
+  course: CourseDetailData;
+  modules: CourseModule[];
+  isPublic?: boolean;
+  studentEnrollment?: boolean;
+  onContinue?: () => void;
+  onEnroll?: () => void;
+  onNext?: () => void;
+  onModuleClick?: (moduleId: string) => void;
+  currentModuleId?: string;
 }
 
-const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({ course, modules }) => {
+const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({
+  course,
+  modules,
+  isPublic = false,
+  studentEnrollment = false,
+  onContinue,
+  onEnroll,
+  onNext,
+  onModuleClick,
+  currentModuleId
+}) => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
@@ -40,6 +74,10 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({ course, m
         return (
           <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
         );
+      case 'disabled':
+        return (
+          <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+        );
       default:
         return null;
     }
@@ -53,9 +91,69 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({ course, m
         return 'text-[#B5D334] font-medium';
       case 'pending':
         return 'text-gray-400';
+      case 'disabled':
+        return 'text-gray-400';
       default:
         return 'text-gray-600';
     }
+  };
+
+  const getModuleStatus = (module: CourseModule) => {
+    if (isPublic) return 'disabled';
+    if (module.id === currentModuleId) return 'current';
+    if (module.completed) return 'completed';
+    if (module.locked) return 'disabled';
+    return 'pending';
+  };
+
+  const handleModuleClick = useCallback((module: CourseModule) => {
+    if (onModuleClick && !module.locked && !isPublic) {
+      onModuleClick(module.id);
+    }
+  }, [onModuleClick, isPublic]);
+
+  const renderModuleItem = (module: CourseModule) => {
+    const status = getModuleStatus(module);
+    const isClickable = !isPublic && !module.locked && onModuleClick;
+    const isCurrent = module.id === currentModuleId;
+    
+    const moduleContent = (
+      <div className={`flex items-center justify-between p-2 rounded-lg transition-colors ${
+        isClickable ? 'cursor-pointer hover:bg-gray-50' : ''
+      } ${isCurrent ? 'bg-[#B5D334]/10 border border-[#B5D334]/20' : ''}`}>
+        <div className="flex items-center gap-2">
+          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium`}>
+            {getStatusIcon(status)}
+          </div>
+          <h4 className={`font-medium text-sm ${
+            getStatusText(status)
+          }`}>
+            {module.title}
+          </h4>
+        </div>
+        <span className={`font-medium text-sm ${
+          getStatusText(status)
+        }`}>10:00</span>
+      </div>
+    );
+
+    if (isClickable) {
+      return (
+        <div 
+          key={module.id}
+          onClick={() => handleModuleClick(module)}
+          className="block"
+        >
+          {moduleContent}
+        </div>
+      );
+    }
+
+    return (
+      <div key={module.id}>
+        {moduleContent}
+      </div>
+    );
   };
 
   return (
@@ -72,7 +170,7 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({ course, m
       </div>
 
       {/* Barra de progresso */}
-      {course.progress && (
+      {!isPublic && studentEnrollment && course.progress && (
         <div>
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>{course.progress.completed}/{course.progress.total} Módulos</span>
@@ -88,35 +186,60 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({ course, m
       )}
 
       {/* Lista de módulos */}
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="font-medium text-gray-900">{course.progress?.total || 0} Módulos</h3>
-          <span className="text-sm text-gray-600">{course.progress ? `${course.progress.completed}/${course.progress.total}` : '0/0'} Concluídos</span>
-        </div>
-        
-        <div className="space-y-2">
-          {modules.map((module) => (
-            <div key={module.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50">
-              {getStatusIcon(module.status)}
-              <div className="flex-1 min-w-0">
-                <div className={`text-sm ${getStatusText(module.status)}`}>
-                  {module.title}
-                </div>
-              </div>
-              <span className="text-xs text-gray-500">{module.duration}</span>
-            </div>
-          ))}
-        </div>
+      <div className="space-y-3">
+        <h3 className="font-medium text-gray-900">Módulos do curso</h3>
+        {modules.map(renderModuleItem)}
       </div>
 
       {/* Botões de ação */}
       <div className="space-y-3 pt-4 border-t border-gray-200">
-        <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
-          Avaliar o curso
-        </button>
-        <button className="w-full px-4 py-2 bg-[#B5D334] text-gray-900 rounded-lg hover:bg-[#A0BC2C] transition-colors text-sm font-medium">
-          Próximo
-        </button>
+        {/* Bloco de ação matricular */}
+        {!isPublic && !studentEnrollment && course.level === 'PAGO' && (
+          <div className="flex flex-col gap-2">
+            <h3 className="font-medium text-gray-900">R$ 3.800,00</h3>
+            <span className="text-sm text-gray-600">
+              Solicite abaixo seu credenciamento para obter mais informações sobre o curso.
+            </span>
+            <button
+              className="w-full bg-[#B5D334] text-gray-900 font-medium py-3 px-6 rounded-lg hover:bg-[#A0BC2C] transition-colors"
+              onClick={onEnroll}
+            >
+              Solicitar este curso
+            </button>
+          </div>
+        )}
+
+        {/* Bloco de ação matricular */}
+        {!isPublic && !studentEnrollment && course.level === 'GRATUITO' && (
+          <div className="flex flex-col gap-2">
+            <button
+              className="w-full bg-[#B5D334] text-gray-900 font-medium py-3 px-6 rounded-lg hover:bg-[#A0BC2C] transition-colors"
+              onClick={onEnroll}
+            >
+              Iniciar curso
+            </button>
+          </div>
+        )}
+
+        {/* Botão de ação aluno */}
+        {!isPublic && studentEnrollment && (
+          <button
+            onClick={onNext}
+            className="w-full bg-[#B5D334] text-gray-900 font-medium py-3 px-4 rounded-lg hover:bg-[#A0BC2C] transition-colors"
+          >
+            Continuar
+          </button>
+        )}
+
+        {/* Botão de ação público */}
+        {isPublic && (
+          <button
+            onClick={onContinue}
+            className="w-full bg-[#B5D334] text-gray-900 font-medium py-3 px-6 rounded-lg hover:bg-[#A0BC2C] transition-colors"
+          >
+            Inscreva-se
+          </button>
+        )}
       </div>
     </div>
   );

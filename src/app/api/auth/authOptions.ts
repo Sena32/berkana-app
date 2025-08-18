@@ -36,11 +36,6 @@ const authOptions: AuthOptions = {
           refreshToken = parsed.refresh_token;
         }
 
-        // Validar se o usuário tem perfil adequado para o app administrativo
-        if (data.user?.profile === UserProfile.ALUNO) {
-          throw new Error('Perfil não autorizado para acessar ambiente administrativo.');
-        }
-
         return {
           ...data.user,
           accessToken: data.access_token,

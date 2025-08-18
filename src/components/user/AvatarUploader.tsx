@@ -19,7 +19,7 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({ avatarUrl, onChange }) 
     <div className="flex flex-col items-center gap-2">
       <div className="relative w-24 h-24">
         <img
-          src={avatarUrl || '/images/brand/berkana_logo.svg'}
+          src={avatarUrl || '/images/brand/logo-berkana.svg'}
           alt="Avatar"
           className="w-24 h-24 rounded-full object-cover border-2 border-primary bg-white"
         />

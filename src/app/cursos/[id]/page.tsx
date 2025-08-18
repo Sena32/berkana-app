@@ -1,67 +1,75 @@
 import PublicHeader from '@/components/layout/PublicHeader';
-// import CourseHero from '@/components/course/CourseHero';
-import Tabs from '@/components/common/Tabs';
-import CourseProgram, { CourseModule } from '@/components/course/CourseProgram';
 import CourseList from '@/components/course/CourseList';
-import { mockCourses } from '@/mocks/course-mock';
 import Footer from '@/components/layout/Footer';
+import CallToAction from '@/components/home/CallToAction';
+import CourseDetailPageComponent from '@/components/course/CourseDetailPage';
+import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
 
-// Mock do curso selecionado
-const course = mockCourses[0];
-const modules: CourseModule[] = [
-  { title: 'Medidas de Correção', description: 'Prevenção e Repressão dos Desvios de Conduta.', duration: '10:00' },
-  { title: 'Estrutura Correcional', description: 'Prevenção ao Desvio de Conduta.', duration: '10:00' },
-  { title: 'Imagem Institucional', description: 'Consequências práticas e jurídicas.', duration: '10:00' },
-];
+// Função utilitária para buscar cursos com tratamento de erro
+async function getCoursesSafe(id: string) {
+  try {
+    const courses = await CourseViewModel.getInstance().listHomeCourses(1);
+    console.log('courses public', courses);
+    return { courses: courses?.courses.filter((course: any) => course.id !== id) || [], error: null };
+  } catch (error: any) {
+    console.error('Erro ao carregar cursos na home:', error);
+    return { courses: [], error: error?.message || 'Erro ao carregar cursos. Tente novamente mais tarde.' };
+  }
+}
 
 export const metadata = {
-  title: `${course.name} | Berkana Academy`,
-  description: course.description,
+  title: `Berkana Academy | Curso`,
+  description: 'Capacitação de qualidade para servidores públicos e colaboradores de instituições privadas. Escolha um curso, aprenda no seu ritmo e conquiste novas oportunidades!'
 };
 
-export default function CourseDetailPage() {
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ moduleId?: string }>;
+}
+
+export default async function CourseDetailPage({ params, searchParams }: PageProps) {
+  const { id } = await params;
+  let moduleId: string | null = null;
+
+  if (searchParams) {
+    const resolvedSearchParams = await searchParams;
+    moduleId = resolvedSearchParams.moduleId || null;
+  }
+  
+  // Buscar cursos recomendados
+  const { courses: coursesRecomended, error } = await getCoursesSafe(id);
+
   return (
     <main className="min-h-screen flex flex-col ">
       <PublicHeader />
-      <section className="max-w-5xl mx-auto w-full py-10 px-4 sm:px-8">
-        {/* <CourseHero title={course.name} duration={course.hours} status={course.isActive ? 'open' : 'locked'} image={course.image} institution={course.institution} modules={course.modules} rating={course.rating} description={course.description} /> */}
-        <Tabs
-          tabs={[
-            {
-              label: 'Sobre',
-              content: (
-                <div>
-                  <h3 className="text-xl font-semibold text-text-primary mb-2">Descrição</h3>
-                  <p className="text-text-secondary mb-6">{course.description}</p>
-                  <CourseProgram modules={modules} />
-                </div>
-              ),
-            },
-            {
-              label: 'Certificado',
-              content: (
-                <div>
-                  <h3 className="text-xl font-semibold text-text-primary mb-2">Certificado de conclusão</h3>
-                  <p className="text-text-secondary">O certificado de conclusão deste curso é emitido por {course.institution}.</p>
-                </div>
-              ),
-            },
-            {
-              label: 'Avaliações',
-              content: (
-                <div>
-                  <h3 className="text-xl font-semibold text-text-primary mb-2">Avaliações</h3>
-                  <p className="text-text-secondary">Em breve, avaliações de alunos aparecerão aqui.</p>
-                </div>
-              ),
-            },
-          ]}
+      <section className='py-10 px-4 sm:px-8'>
+        <CourseDetailPageComponent 
+          backLink="/cursos" 
+          courseId={id} 
+          moduleId={moduleId}
+          autoLoad={true} 
+          isPublic={true}
         />
-        <div className="mt-12">
-          <h3 className="text-xl font-semibold text-text-primary mb-4">Cursos relacionados</h3>
-          <CourseList courses={mockCourses.slice(1, 4)} />
-        </div>
       </section>
+      
+      {/* Cursos para você */}
+      {coursesRecomended.length > 0 && (
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <CourseList 
+            courses={coursesRecomended}
+            title="Cursos para você"
+            cardType="default"
+            navigation={
+              {
+                baseUrl: '/cursos',
+                useRouter: false,
+                enabled: true,
+              }
+            }
+          />
+        </div>
+      )}
+      <CallToAction />
       <Footer />
     </main>
   );

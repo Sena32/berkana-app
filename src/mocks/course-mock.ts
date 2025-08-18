@@ -11,7 +11,10 @@ export const mockCourses: CourseCardProps[] = [
     isActive: true,
     thumbnail: '/images/curso.png',
     image: '/images/curso.png',
-    description: 'Curso sobre armamento, munição e técnicas de tiro.'
+    description: 'Curso sobre armamento, munição e técnicas de tiro.',
+    categoryName: 'Segurança',
+    modulesCount: 5,
+    level: 'Iniciante'
   },
   {
     id: '2',
@@ -23,7 +26,10 @@ export const mockCourses: CourseCardProps[] = [
     isActive: true,
     thumbnail: '/images/curso.png',
     image: '/images/curso.png',
-    description: 'Curso sobre fiscalização, transporte e direção segura.'
+    description: 'Curso sobre fiscalização, transporte e direção segura.',
+    categoryName: 'Segurança',
+    modulesCount: 5,
+    level: 'Iniciante'
   },
   {
     id: '3',
@@ -35,7 +41,10 @@ export const mockCourses: CourseCardProps[] = [
     isActive: false,
     thumbnail: '/images/curso.png',
     image: '/images/curso.png',
-    description: 'Curso de comunicação e linguagem para profissionais.'
+    description: 'Curso de comunicação e linguagem para profissionais.',
+    categoryName: 'Segurança',
+    modulesCount: 5,
+    level: 'Iniciante'
   },
   {
     id: '4',
@@ -47,7 +56,10 @@ export const mockCourses: CourseCardProps[] = [
     isActive: true,
     thumbnail: '/images/curso.png',
     image: '/images/curso.png',
-    description: 'Curso sobre gestão de equipes e liderança.'
+    description: 'Curso sobre gestão de equipes e liderança.',
+    categoryName: 'Segurança',
+    modulesCount: 5,
+    level: 'Iniciante'
   },
   {
     id: '5',
@@ -59,7 +71,10 @@ export const mockCourses: CourseCardProps[] = [
     isActive: true,
     thumbnail: '/images/curso.png',
     image: '/images/curso.png',
-    description: 'Curso sobre saúde mental e bem-estar no ambiente de trabalho.'
+    description: 'Curso sobre saúde mental e bem-estar no ambiente de trabalho.',
+    categoryName: 'Segurança',
+    modulesCount: 5,
+    level: 'Iniciante'
   },
   {
     id: '6',
@@ -71,6 +86,9 @@ export const mockCourses: CourseCardProps[] = [
     isActive: false,
     thumbnail: '/images/curso.png',
     image: '/images/curso.png',
-    description: 'Curso sobre técnicas de investigação criminal.'
+    description: 'Curso sobre técnicas de investigação criminal.',
+    categoryName: 'Segurança',
+    modulesCount: 5,
+    level: 'Iniciante'
   }
 ]; 

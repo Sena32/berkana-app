@@ -73,7 +73,7 @@ const RegisterForm: React.FC = () => {
     <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)} noValidate>
       <h1 className="text-2xl font-bold text-text-primary mb-2">Criar uma conta</h1>
       <div className="text-sm text-text-secondary mb-2">
-        Já tem um cadastro? <a href="/entrar" className="text-primary font-medium hover:underline">Entrar</a>
+        Já tem um cadastro? <a href="/entrar" className="text-[#B5D334] font-semibold hover:underline transition-colors">Entrar</a>
       </div>
       {apiError && <Alert message={apiError} variant="error" />}
       {success && <Alert message="Cadastro realizado com sucesso!" variant="success" />}
@@ -135,7 +135,7 @@ const RegisterForm: React.FC = () => {
         <input
           type="checkbox"
           {...register("acceptTerms")}
-          className="accent-primary w-4 h-4"
+          className="accent-[#B5D334] w-4 h-4"
         />
         <span className="text-xs text-text-secondary">
           Ao criar uma conta você estará de acordo com nossos <a href="/termos" className="text-primary hover:underline">Termos de Uso</a> e <a href="/privacidade" className="text-primary hover:underline">Política de Privacidade</a>.

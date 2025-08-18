@@ -1,5 +1,5 @@
 import { CourseService } from '@/services/course.service';
-import { Course, ListCoursesResponse } from '@/types/course';
+import { Course, ListCoursesResponse, ListCourseModulesResponse, ListCourseModuleVideosResponse, CourseModule, CourseModuleVideo } from '@/types/course';
 
 export class CourseViewModel {
   private static instance: CourseViewModel;
@@ -12,6 +12,7 @@ export class CourseViewModel {
     }
     return CourseViewModel.instance;
   }
+  private baseUrl = process.env.NEXT_PUBLIC_INTERNAL_API_URL;
 
   async listHomeCourses(page: number = 1, name?: string): Promise<ListCoursesResponse> {
     try {
@@ -52,9 +53,13 @@ export class CourseViewModel {
 /**
  * Busca curso por ID
  */
-async getCourseById(id: string): Promise<Course> {
+async getCourseById(id: string, isPublic: boolean = false): Promise<Course> {
   try {
-    const response = await fetch(`/api/course/${id}`);
+    const response = await fetch(`/api/course/${id}`, {
+      headers: {
+        'isPublic': isPublic ? 'true' : 'false',
+      },
+    });
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message);
@@ -66,52 +71,89 @@ async getCourseById(id: string): Promise<Course> {
 }
 
   /**
-     * Lista modulos do curso
+     * Lista módulos do curso
      */
-  async listCourseModules(courseId: string): Promise<ListCoursesResponse> {
+  async listCourseModules(courseId: string, isPublic: boolean = false): Promise<CourseModule[]> {
     try {
-      let url = `/api/student/courses/${courseId}/modules`;
-      const response = await fetch(url);
+      const response = await fetch(`/api/course/${courseId}/modules`, {
+        headers: {
+          'isPublic': isPublic ? 'true' : 'false',
+        },
+      });
+      
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message);
       }
+      
       return response.json();
     } catch (error: any) {
       console.log('listCourseModules Error: ', error);
-      throw new Error(error.message || 'Erro ao listar modulos do curso');
+      throw new Error(error.message || 'Erro ao listar módulos do curso');
     }
   }
 
   /**
-     * Lista videos do modulo
-     */
-  async listModuleVideos(moduleId: string): Promise<ListCoursesResponse> {
+   * Lista vídeos do módulo
+   */
+  async listModuleVideos(moduleId: string, isPublic: boolean = false): Promise<CourseModuleVideo[]> {
     try {
-      let url = `/api/student/courses/modules/${moduleId}/videos`;
-      const response = await fetch(url);
+      const response = await fetch(`/api/course-modules/${moduleId}/videos`, {
+        headers: {
+          'isPublic': isPublic ? 'true' : 'false',
+        },
+      });
+      
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message);
       }
+      
       return response.json();
     } catch (error: any) {
       console.log('listModuleVideos Error: ', error);
-      throw new Error(error.message || 'Erro ao listar videos do modulo');
+      throw new Error(error.message || 'Erro ao listar vídeos do módulo');
     }
   }
 
+  /**
+   * Marca módulo como completo
+   */
   async completeModule(moduleId: string): Promise<any> {
     try {
-      const response = await fetch(`/api/module-progress/modules/${moduleId}/complete`);
+      const response = await fetch(`/api/module-progress/modules/${moduleId}/complete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message);
       }
+      
       return response.json();
     } catch (error: any) {
-      throw new Error(error.message || 'Erro ao completar modulo');
+      throw new Error(error.message || 'Erro ao completar módulo');
     }
   }
 
+  /**
+   * Obtém o progresso do usuário no curso
+   */
+  async getCourseProgress(courseId: string): Promise<any> {
+    try {
+      const response = await fetch(`/api/course/${courseId}/progress`);
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
+      
+      return response.json();
+    } catch (error: any) {
+      throw new Error(error.message || 'Erro ao obter progresso do curso');
+    }
+  }
 } 

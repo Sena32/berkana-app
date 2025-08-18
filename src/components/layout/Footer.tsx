@@ -1,12 +1,24 @@
+import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full  border-t border-border pt-10 pb-6 px-4 sm:px-8 mt-12">
+    <footer className="w-full bg-white shadow-[0_-2px_2px_0_rgba(0,0,0,0.15)] pt-10 pb-6 px-4 sm:px-8 mt-12">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8 md:gap-16">
         {/* Coluna institucional */}
         <div className="flex-1 min-w-[220px] mb-6 md:mb-0">
-          <img src="/images/brand/berkana_logo.svg" alt="Berkana Academy" className="h-10 mb-4" />
+          <Link href="/">
+            <Image 
+              src="/images/brand/logo-berkana.svg" 
+              alt="Logo Berkana"
+              unoptimized={true}
+              width={150}
+              height={100}
+              className="mb-4"
+              priority={false}
+            />
+          </Link>
           <p className="text-sm text-text-secondary mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget iaculis nunc.</p>
           <p className="text-xs text-text-secondary">Rua Machado Bittencourt, 190 – CJ 682<br />Vila Clementino, São Paulo - SP, 04044-000</p>
           <p className="text-xs text-text-secondary mt-2">Telefone: (11) 5539-5166<br />academy@berkana.com.br</p>

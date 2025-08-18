@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 interface AuthLayoutProps {
@@ -19,9 +21,19 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         style={{ backgroundImage: `url(${imageSrc})` }}
       >
         {/* Overlay degradê sutil */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a]/60 to-[#2563eb]/40 z-0" aria-hidden="true" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#000000]/100 to-[#000000]/20 z-0" aria-hidden="true" />
         <div className="relative z-10 flex flex-col items-start justify-center w-full h-full px-6 py-12 md:py-0 md:px-12 max-w-md">
-          <img src="/images/brand/berkana_logo.svg" alt="Logo Berkana" className="h-12 mb-4" />
+          <Link href="/">
+            <Image 
+              src="/images/brand/logo-berkana-vertical.svg" 
+              alt="Logo Berkana"
+              unoptimized={true}
+              width={75}
+              height={125}
+              className="mb-4"
+              priority={false}
+            />
+          </Link>
           <h2 className="text-2xl md:text-3xl font-semibold text-white text-left mb-2" style={{ fontFamily: 'var(--font-jakarta)' }}>
             Melhore suas habilidades com Berkana Academy!
           </h2>

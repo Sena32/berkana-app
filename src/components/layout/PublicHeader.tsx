@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import InputField from '../common/InputField';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface NavItem {
   label: string;
@@ -47,9 +48,17 @@ const PublicHeader: React.FC = () => {
   return (
     <header className="w-full bg-white shadow-sm px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40" role="banner">
       {/* Logo */}
-      <a href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Página inicial Berkana Academy">
-        <Image src="/images/brand/berkana_logo.svg" alt="Berkana Academy" className="h-10 w-auto" width={100} height={100} />
-      </a>
+      <Link href="/">
+        <Image 
+          src="/images/brand/logo-berkana.svg" 
+          alt="Logo Berkana"
+          unoptimized={true}
+          width={150}
+          height={100}
+          className="mb-4"
+          priority={false}
+        />
+      </Link>
       {/* Agrupador do menu, busca e botões */}
       <div className="relative flex-1 flex items-center justify-end min-w-0">
         {/* Campo de busca animado, cobre toda a área exceto a logo */}

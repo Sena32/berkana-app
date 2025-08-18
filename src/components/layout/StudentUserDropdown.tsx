@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { Dropdown } from '@/components/ui/dropdown/Dropdown';
 import { DropdownItem } from '@/components/ui/dropdown/DropdownItem';
@@ -14,16 +15,33 @@ const StudentUserDropdown: React.FC = () => {
     setIsOpen(false);
   };
 
+  const avatarImg = user?.avatar && user.avatar !== '' 
+    ? `/api/images/users/avatar/${user.avatar}` 
+    : null;
+    
   return (
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100"
       >
-        <div className="w-8 h-8 rounded-full bg-[#B5D334] flex items-center justify-center">
-          <span className="text-[#16285E] font-semibold text-sm">
-            {user?.name?.charAt(0) || 'U'}
-          </span>
+        <div className="w-8 h-8 rounded-full bg-[#B5D334] flex items-center justify-center overflow-hidden">
+          {avatarImg?(
+            <Image 
+              src={avatarImg} 
+              alt={user?.name || 'Usuário'}
+              unoptimized={true}
+              fill
+              className="w-full h-full object-cover rounded-full"
+              priority={false}
+            />
+          ):(
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="22" cy="22" r="22" fill="#E5E7EB"/>
+            <path d="M22 22C24.7614 22 27 19.7614 27 17C27 14.2386 24.7614 12 22 12C19.2386 12 17 14.2386 17 17C17 19.7614 19.2386 22 22 22Z" fill="#9CA3AF"/>
+            <path d="M22 24C17.5817 24 14 27.5817 14 32H30C30 27.5817 26.4183 24 22 24Z" fill="#9CA3AF"/>
+          </svg>
+          )}
         </div>
       </button>
 

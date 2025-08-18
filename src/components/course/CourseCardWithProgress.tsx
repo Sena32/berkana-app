@@ -9,6 +9,9 @@ export interface CourseCardWithProgressProps {
   name: string;
   institution: string;
   rating: number;
+  modulesCount: number;
+  level: string;
+  categoryName: string;
   progress?: {
     completed: number;
     total: number;
@@ -32,7 +35,10 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
   id,
   name,
   institution,
+  level,
+  categoryName,
   rating,
+  modulesCount,
   progress,
   image,
   progressColor = 'green',
@@ -112,7 +118,7 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
         {progress && (
           <div className="mb-3">
             <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>{progress.completed}/{progress.total} Módulos</span>
+              <span>{progress.completed}/{modulesCount} Módulos</span>
               <span>{progress.percentage}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">

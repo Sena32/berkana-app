@@ -6,10 +6,27 @@ export const metadata = {
   description: 'Acompanhe seu progresso e acesse o conteúdo do curso.',
 };
 
-export default function StudentCourseDetailPage() {
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ moduleId?: string }>;
+}
+
+export default async function StudentCourseDetailPage({ params, searchParams }: PageProps) {
+  const { id } = await params;
+  let moduleId: string | null = null;
+
+  if (searchParams) {
+    const resolvedSearchParams = await searchParams;
+    moduleId = resolvedSearchParams.moduleId || null;
+  }
+
   return (
     <StudentLayout>
-      <CourseDetailPage />
+      <CourseDetailPage 
+        autoLoad={true} 
+        courseId={id} 
+        moduleId={moduleId}
+      />
     </StudentLayout>
   );
 } 

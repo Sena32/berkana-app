@@ -6,8 +6,9 @@ export enum CourseLevel {
 export type Course = {
   id: string;
   name: string;
+  categoryName: string;
   institution: string;
-  modules?: number;
+  modulesCount: number;
   hours: string;
   rating?: number;
   isActive: boolean;

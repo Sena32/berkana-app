@@ -68,9 +68,17 @@ const StudentSidebar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center">
-              <a href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Página inicial Berkana Academy">
-                <Image src="/images/brand/berkana_logo.svg" alt="Berkana Academy" className="h-10 w-auto" width={100} height={100} />
-              </a>
+            <Link href="/">
+              <Image 
+                src="/images/brand/logo-berkana.svg" 
+                alt="Logo Berkana"
+                unoptimized={true}
+                width={150}
+                height={100}
+                className="mb-4"
+                priority={false}
+              />
+            </Link>
             </div>
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"

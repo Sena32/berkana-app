@@ -17,16 +17,17 @@ export async function GET(
       );
     }
 
-    let course;
-    if (isPublic) {
-      course = await CourseService.getCourseById(id);
+    let modules;
+    if (token) {
+      modules = await CourseService.listCourseModules(id, { Authorization: `Bearer ${token}` });
     } else {
-      course = await CourseService.getCourseById(id, { Authorization: `Bearer ${token}` });
+      //TODO: implementar chamada a API publica
+      modules = await CourseService.listCourseModules(id);
     }
-    return NextResponse.json(course.data);
+    return NextResponse.json(modules.data);
   } catch (error: any) {
     return NextResponse.json(
-      { message: error.message || 'Erro ao buscar curso' },
+      { message: error.message || 'Erro ao buscar módulos do curso' },
       { status: error.status || 500 }
     );
   }

@@ -7,7 +7,6 @@ import PublicHeader from "@/components/layout/PublicHeader";
 import Footer from "@/components/layout/Footer";
 import TestimonialsCarousel from "@/components/home/TestimonialsCarousel";
 import CallToAction from "@/components/home/CallToAction";
-import Button from '@/components/common/Button';
 import Alert from '@/components/common/Alert';
 import { CourseViewModel } from "@/viewmodels/course/CourseViewModel";
 import { useDebounce } from "@/hooks/useDebounce";
