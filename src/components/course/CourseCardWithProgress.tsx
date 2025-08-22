@@ -12,6 +12,7 @@ export interface CourseCardWithProgressProps {
   modulesCount: number;
   level: string;
   categoryName: string;
+  thumbnail: string;
   progress?: {
     completed: number;
     total: number;
@@ -40,13 +41,18 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
   rating,
   modulesCount,
   progress,
+  thumbnail,
   image,
   progressColor = 'green',
   certificateLink,
   navigation
 }) => {
   const router = useRouter();
-  const imgSrc = image && image !== '' ? image : fallbackImage;
+    
+  // Usar a API route local em vez da URL HTTP direta
+  const imgSrc = thumbnail && thumbnail !== '' 
+    ? `/api/images/courses/thumbnail/${thumbnail}` 
+    : fallbackImage;
   const isCompleted = progress?.percentage === 100;
   
   const getProgressColor = () => {
