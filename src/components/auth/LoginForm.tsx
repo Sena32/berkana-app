@@ -28,19 +28,23 @@ const LoginForm: React.FC = () => {
   });
 
   const onSubmit = async (data: LoginSchema) => {
-    // e.preventDefault();
     setIsLoading(true);
-    // setError("");
     try {
       const result = await login(data.email, data.password);
+      
       if (result?.error) {
-        // setError(result.error);
+        console.error("Erro no login:", result.error);
+        // Aqui você pode adicionar um toast ou mensagem de erro
         return;
       }
-      router.push("/aluno");
+      
+      if (result?.ok) {
+        // Login bem-sucedido, redireciona
+        router.push("/aluno");
+      }
     } catch (error) {
-      // setError("Erro ao fazer login");
       console.error("Erro no login:", error);
+      // Aqui você pode adicionar um toast ou mensagem de erro
     } finally {
       setIsLoading(false);
     }
@@ -93,9 +97,9 @@ const LoginForm: React.FC = () => {
           className="w-36 h-12"
           size="md"
           variant="primary"
-          disabled={isSubmitting}
+          disabled={isLoading}
         >
-          {isSubmitting ? "Entrando..." : "Sign In"}
+          {isLoading ? "Entrando..." : "Entrar"}
         </Button>
       </div>
     </form>

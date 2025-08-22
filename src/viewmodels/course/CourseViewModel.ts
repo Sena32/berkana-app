@@ -156,4 +156,80 @@ async getCourseById(id: string, isPublic: boolean = false): Promise<Course> {
       throw new Error(error.message || 'Erro ao obter progresso do curso');
     }
   }
+
+  /**
+   * Mock: Lista módulos do curso com delay simulado
+   */
+  async listCourseModulesMock(courseId: string, isPublic: boolean = false): Promise<CourseModule[]> {
+    // Simula delay de rede realista (300-800ms)
+    const delay = Math.random() * 500 + 300;
+    
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const mockModules: CourseModule[] = [
+          {
+            id: '1',
+            title: 'Introdução ao Curso',
+            order: 1,
+            locked: false,
+            completed: false
+          },
+          {
+            id: '2',
+            title: 'Fundamentos Teóricos',
+            order: 2,
+            locked: false,
+            completed: false
+          },
+          {
+            id: '3',
+            title: 'Aplicação Prática',
+            order: 3,
+            locked: false,
+            completed: false
+          }
+        ];
+        
+        resolve(mockModules);
+      }, delay);
+    });
+  }
+
+  /**
+   * Mock: Lista vídeos do módulo com delay simulado
+   */
+  async listModuleVideosMock(moduleId: string, isPublic: boolean = false): Promise<CourseModuleVideo[]> {
+    // Simula delay de rede realista (200-600ms)
+    const delay = Math.random() * 400 + 200;
+    
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const mockVideos: CourseModuleVideo[] = [
+          {
+            id: '1',
+            name: 'Vídeo 1: Conceitos Iniciais',
+            description: 'Primeira parte da explicação',
+            link: 'https://vimeo.com/76979871',
+            order: 1
+          },
+          {
+            id: '2',
+            name: 'Vídeo 2: Exemplos Práticos',
+            description: 'Demonstração de conceitos',
+            link: 'https://vimeo.com/76979871',
+            order: 2
+          },
+          {
+            id: '3',
+            name: 'Vídeo 3: Exercícios',
+            description: 'Atividades práticas para fixação',
+            link: 'https://vimeo.com/76979871',
+            order: 3
+          }
+        ];
+        
+        resolve(mockVideos);
+      }, delay);
+    });
+  }
 } 

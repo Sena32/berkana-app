@@ -16,7 +16,7 @@ const StudentHeader: React.FC = () => {
     { label: 'Visão geral', href: '/aluno', active: true },
     { label: 'Meus cursos', href: '/aluno/cursos' },
     { label: 'Meus eventos', href: '/aluno/eventos' },
-    { label: 'Meu perfil', href: '/aluno/perfil' },
+    { label: 'Meu perfil', href: '/aluno/configuracoes' },
   ];
 
   return (

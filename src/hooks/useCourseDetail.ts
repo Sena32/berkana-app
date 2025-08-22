@@ -26,6 +26,7 @@ interface CourseDetailData {
   posterImage: string;
   thumbnail: string;
   level: string;
+  price: number;
   progress?: {
     completed: number;
     total: number;
@@ -71,6 +72,7 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
         description: course.description,
         posterImage: course.image,
         thumbnail: thumbnail,
+        price: course.price,
         progress: {
           completed: 0,
           total: course.modulesCount || 0,
@@ -119,7 +121,7 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
     if (!courseId) return;
     
     try {
-      const modulesResponse = await CourseViewModel.getInstance().listCourseModules(courseId);
+      const modulesResponse = await CourseViewModel.getInstance().listCourseModulesMock(courseId);
       
       setModules(modulesResponse);
       let firstModuleId = modulesResponse.length > 0 ? modulesResponse[0].id : null;
@@ -142,7 +144,7 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
   const fetchModuleVideos = async (moduleId: string) => {
     console.log('fetchModuleVideos', moduleId);
     try {
-      const videosResponse = await CourseViewModel.getInstance().listModuleVideos(moduleId);
+      const videosResponse = await CourseViewModel.getInstance().listModuleVideosMock(moduleId);
       console.log('videosResponse', videosResponse);
       setModuleVideos(videosResponse);
       

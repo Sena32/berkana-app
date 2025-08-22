@@ -59,7 +59,7 @@ const StudentUserDropdown: React.FC = () => {
           <DropdownItem
             onItemClick={() => setIsOpen(false)}
             tag="a"
-            href="/aluno/perfil"
+            href="/aluno/configuracoes"
             className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
           >
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">

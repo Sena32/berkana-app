@@ -2,7 +2,8 @@
 import React, { useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CourseModule } from '@/types/course';
+import { formatCurrency } from '@/lib/utils';
+import { CourseModule, CourseModuleVideo } from '@/types/course';
 
 // Importar a interface Module
 interface Module {
@@ -28,6 +29,7 @@ interface CourseDetailData {
   posterImage: string;
   thumbnail: string;
   level: string;
+  price: number;
   progress?: {
     completed: number;
     total: number;
@@ -100,6 +102,7 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({
 
   const getModuleStatus = (module: CourseModule) => {
     if (isPublic) return 'disabled';
+    if (!studentEnrollment) return 'disabled';
     if (module.id === currentModuleId) return 'current';
     if (module.completed) return 'completed';
     if (module.locked) return 'disabled';
@@ -114,13 +117,13 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({
 
   const renderModuleItem = (module: CourseModule) => {
     const status = getModuleStatus(module);
-    const isClickable = !isPublic && !module.locked && onModuleClick;
+    const isClickable = !isPublic && !module.locked && studentEnrollment && onModuleClick;
     const isCurrent = module.id === currentModuleId;
     
     const moduleContent = (
       <div className={`flex items-center justify-between p-2 rounded-lg transition-colors ${
         isClickable ? 'cursor-pointer hover:bg-gray-50' : ''
-      } ${isCurrent ? 'bg-[#B5D334]/10 border border-[#B5D334]/20' : ''}`}>
+      } ${isCurrent && studentEnrollment ? 'bg-[#B5D334]/10 border border-[#B5D334]/20' : ''}`}>
         <div className="flex items-center gap-2">
           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium`}>
             {getStatusIcon(status)}
@@ -196,7 +199,7 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({
         {/* Bloco de ação matricular */}
         {!isPublic && !studentEnrollment && course.level === 'PAGO' && (
           <div className="flex flex-col gap-2">
-            <h3 className="font-medium text-gray-900">R$ 3.800,00</h3>
+            <h3 className="font-medium text-gray-900">{formatCurrency(course.price)}</h3>
             <span className="text-sm text-gray-600">
               Solicite abaixo seu credenciamento para obter mais informações sobre o curso.
             </span>
@@ -212,13 +215,16 @@ const CourseProgressSidebar: React.FC<CourseProgressSidebarProps> = ({
         {/* Bloco de ação matricular */}
         {!isPublic && !studentEnrollment && course.level === 'GRATUITO' && (
           <div className="flex flex-col gap-2">
-            <button
-              className="w-full bg-[#B5D334] text-gray-900 font-medium py-3 px-6 rounded-lg hover:bg-[#A0BC2C] transition-colors"
-              onClick={onEnroll}
-            >
-              Iniciar curso
-            </button>
-          </div>
+          <span className="text-sm text-gray-600">
+            Solicite abaixo seu credenciamento para obter mais informações sobre o curso.
+          </span>
+          <button
+            className="w-full bg-[#B5D334] text-gray-900 font-medium py-3 px-6 rounded-lg hover:bg-[#A0BC2C] transition-colors"
+            onClick={onEnroll}
+          >
+            Solicitar este curso
+          </button>
+        </div>
         )}
 
         {/* Botão de ação aluno */}

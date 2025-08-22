@@ -19,6 +19,7 @@ export type Course = {
   createdAt: string;
   updatedAt: string;
   level: CourseLevel;
+  price: number;
 };
 
 export interface ListCoursesResponse {

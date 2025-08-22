@@ -20,11 +20,33 @@ const StudentDashboard: React.FC = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       const { courses: coursesData } = await CourseViewModel.getInstance().listPublicCourses(1);
+      
+      // Adicionar progresso mockado para cursos em andamento
+      const coursesWithMockProgress = coursesData.map((course, index) => ({
+        ...course,
+        modulesCount: 3,
+        progress: {
+          completed: Math.floor(Math.random() * 3) + 1, // 1 a modulesCount
+          total: 3,
+          percentage: Math.floor(Math.random() * 90) + 10 // 10% a 99%
+        },
+        progressColor: ['green'][index % 3] as 'green' | 'orange' | 'blue'
+      }));
+      
       // TODO: Implementar lógica para filtrar cursos do usuário que estão em andamento
-      setCoursesInProgress(coursesData);
-      setFreeCourses(coursesData.filter(course => course.level === CourseLevel.GRATUITO));
+      setCoursesInProgress(coursesWithMockProgress);
+      
+      // Ordenar cursos gratuitos por data de criação (mais recentes primeiro)
+      const sortedFreeCourses = coursesData
+        .filter(course => course.level === CourseLevel.GRATUITO)
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setFreeCourses(sortedFreeCourses);
+      
       // TODO: Implementar lógica para filtrar cursos recomendados
-      setRecommendedCourses(coursesData);
+      // Ordenar cursos recomendados por data de criação (mais recentes primeiro)
+      const sortedRecommendedCourses = coursesData
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setRecommendedCourses(sortedRecommendedCourses);
     };
     fetchCourses();
   }, []);
@@ -142,7 +164,7 @@ const StudentDashboard: React.FC = () => {
         {/* Cursos para você */}
         <CourseList 
           courses={recommendedCourses}
-          title="Cursos para você"
+          title="Cursos novos"
           cardType="default"
           navigation={useCourseNavigation({
             baseUrl: '/aluno/cursos',

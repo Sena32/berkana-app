@@ -65,7 +65,7 @@ const authOptions: AuthOptions = {
         };
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
-        token.accessTokenExpires = Date.now() + 15 * 60 * 1000; // 15 minutos
+        token.accessTokenExpires = Date.now() + 15 * 60 * 1000; // 5 minutos
         return token;
       }
 
@@ -86,7 +86,15 @@ const authOptions: AuthOptions = {
 
       // Se expirou, faça o refresh usando o refreshToken salvo no JWT
       try {       
-        if (!token.refreshToken) throw new Error('No refresh token');
+        if (!token.refreshToken) {
+          // Se não há refresh token, desloga o usuário
+          token.error = "NoRefreshTokenError";
+          delete token.accessToken;
+          delete token.refreshToken;
+          delete token.accessTokenExpires;
+          return token;
+        }
+        
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
           method: 'POST',
           headers: {
@@ -123,6 +131,18 @@ const authOptions: AuthOptions = {
     },
     
     async session({ session, token }) {
+      // Se há erro de refresh token, força logout
+      if (token.error === "NoRefreshTokenError" || token.error === "RefreshAccessTokenError") {
+        // Retorna sessão com erro que force logout no frontend
+        return {
+          ...session,
+          user: null,
+          accessToken: undefined,
+          error: token.error,
+          expires: new Date(0).toISOString() // Sessão expirada
+        } as any;
+      }
+      
       session.user = token.user as any;
       session.accessToken = token.accessToken as string;
       return session;
@@ -144,6 +164,25 @@ const authOptions: AuthOptions = {
         });
       } catch (error) {
         throw error;
+      }
+    },
+    async session({ session, token }) {
+      // Se há erro na sessão, força logout
+      if ((session as any).error || token.error) {
+        console.log('Sessão com erro detectada, forçando logout:', (session as any).error || token.error);
+        
+        // Força logout removendo todos os dados da sessão
+        (session as any).user = null;
+        (session as any).accessToken = undefined;
+        (session as any).error = token.error || (session as any).error;
+        
+        // Retorna sessão inválida para forçar logout
+        return {
+          ...session,
+          user: null,
+          accessToken: undefined,
+          error: token.error || (session as any).error
+        } as any;
       }
     },
   },

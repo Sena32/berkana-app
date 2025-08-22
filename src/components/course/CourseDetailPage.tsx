@@ -9,6 +9,7 @@ import CourseProgressSidebar from './CourseProgressSidebar';
 import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { useRouter } from 'next/navigation';
 import { CourseModule, CourseModuleVideo } from '@/types/course';
+import CourseVideoPlayerSimple from './CourseVideoPlayerSimple';
 
 interface CourseDetailData {
   id: string;
@@ -26,6 +27,7 @@ interface CourseDetailData {
   posterImage: string;
   thumbnail: string;
   level: string;
+  price: number;
   progress?: {
     completed: number;
     total: number;
@@ -302,9 +304,11 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
               />
             </div>
           ) : (
-            <CourseVideoPlayer 
-              videoUrl={currentModule && moduleVideos.length > 0 ? moduleVideos[0].link : ''}
-              posterImage={courseData.thumbnail}
+            <CourseVideoPlayerSimple 
+              videoUrl={currentModule && moduleVideos.length > 0 ? moduleVideos[0].link : 'https://vimeo.com/76979871'}
+              autoplay={false}
+              loop={false}
+              muted={false}
             />
           )}
 

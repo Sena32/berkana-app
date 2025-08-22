@@ -50,7 +50,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             variant="button-outline"
             size="md"
             className="min-w-[170px]"
-            href="/cursos"
+            href="/entrar"
           >
             Começar agora
           </Link>

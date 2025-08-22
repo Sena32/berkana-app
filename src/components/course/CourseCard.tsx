@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import TruncatedText from '@/components/ui/TruncatedText';
+import { formatCurrency } from '@/lib/utils';
 import { BookOpenIcon, BuildingOffice2Icon, BuildingOfficeIcon, ClockIcon, StarIcon } from '@heroicons/react/24/outline';
 
 export interface CourseCardProps {
@@ -20,6 +21,7 @@ export interface CourseCardProps {
   categoryName: string;
   modulesCount: number;
   level: string;
+  price?: number;
   // Props de navegação
   navigation?: {
     enabled: boolean;
@@ -48,7 +50,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
   level,
   navigation,
   status,
-  modulesCount
+  modulesCount,
+  price
 }) => {
   const router = useRouter();
   
