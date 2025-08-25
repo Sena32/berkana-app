@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import CourseList from './CourseList';
 import CourseCardWithProgress from './CourseCardWithProgress';
 import CourseCard from './CourseCard';
-import { CourseCardProps } from './CourseCard';
-import { CourseCardWithProgressProps } from './CourseCardWithProgress';
 import { CourseWithOptionalProgress } from './CourseList';
 import { useCourseNavigation } from '@/hooks/useCourseNavigation';
 import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
@@ -20,7 +18,7 @@ const MyCoursesPage: React.FC = () => {
   
   const [coursesInProgress, setCoursesInProgress] = useState<CourseWithOptionalProgress[]>([]);
   const [recommendedCourses, setRecommendedCourses] = useState<CourseWithOptionalProgress[]>([]);
-  const [completedCourses, setCompletedCourses] = useState<any[]>([]);
+  const [completedCourses, setCompletedCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -59,72 +57,25 @@ const MyCoursesPage: React.FC = () => {
 
   //       // Converter para o formato esperado pelos componentes
   //       const inProgressFormatted: CourseWithOptionalProgress[] = inProgress.map(userCourse => ({
-  //         id: userCourse.course.id,
-  //         name: userCourse.course.name,
-  //         institution: userCourse.course.institution,
-  //         rating: userCourse.course.rating,
+  //         ...userCourse.course,
   //         progress: userCourse.progress,
-  //         image: userCourse.course.image,
-  //         progressColor: 'green',
-  //         hours: userCourse.course.hours,
-  //         isActive: userCourse.course.isActive,
-  //         thumbnail: userCourse.course.thumbnail,
-  //         description: userCourse.course.description
-  //       }));
-
-  //       const completedFormatted: CourseCardWithProgressProps[] = completed.map(userCourse => ({
-  //         id: userCourse.course.id,
-  //         name: userCourse.course.name,
-  //         institution: userCourse.course.institution,
-  //         rating: userCourse.course.rating,
-  //         progress: userCourse.progress,
-  //         image: userCourse.course.image,
   //         progressColor: 'green'
   //       }));
 
   //       setCoursesInProgress(inProgressFormatted);
-  //       setCompletedCourses(completedFormatted);
+  //       setCompletedCourses(completed.map(uc => uc.course));
 
   //       // Buscar cursos recomendados (cursos públicos que o usuário não está matriculado)
   //       try {
   //         const recommendedData = await UserCourseViewModel.getInstance().getRecommendedCourses(1);
-  //         const recommendedFormatted: CourseCardProps[] = recommendedData.courses.map((course: Course) => ({
-  //           id: course.id,
-  //           name: course.name,
-  //           institution: course.institution,
-  //           modules: course.modules,
-  //           hours: course.hours,
-  //           rating: course.rating,
-  //           isActive: course.isActive,
-  //           thumbnail: course.thumbnail,
-  //           image: course.image,
-  //           description: course.description
-  //         }));
-  //         setRecommendedCourses(recommendedFormatted);
-  //       } catch (recommendedError) {
-  //         // Se não conseguir buscar cursos recomendados, usar cursos públicos como fallback
-  //         const publicCoursesData = await CourseViewModel.getInstance().listPublicCourses(1);
-  //         const publicFormatted: CourseCardProps[] = publicCoursesData.courses
-  //           .filter((course: Course) => !inProgress.some(uc => uc.courseId === course.id) && !completed.some(uc => uc.courseId === course.id))
-  //           .slice(0, 6)
-  //           .map((course: Course) => ({
-  //             id: course.id,
-  //             name: course.name,
-  //             institution: course.institution,
-  //             modules: course.modules,
-  //             hours: course.hours,
-  //             rating: course.rating,
-  //             isActive: course.isActive,
-  //             thumbnail: course.thumbnail,
-  //             image: course.image,
-  //             description: course.description
-  //           }));
-  //         setRecommendedCourses(publicFormatted);
+  //         setRecommendedCourses(recommendedData.courses);
+  //       } catch (error) {
+  //         console.error('Erro ao carregar cursos recomendados:', error);
   //       }
 
-  //     } catch (err: any) {
-  //       console.error('Erro ao carregar cursos:', err);
-  //       setError(err.message || 'Erro ao carregar cursos. Tente novamente mais tarde.');
+  //     } catch (error) {
+  //       console.error('Erro ao carregar cursos:', error);
+  //       setError('Erro ao carregar cursos. Tente novamente.');
   //     } finally {
   //       setLoading(false);
   //     }

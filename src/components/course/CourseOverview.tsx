@@ -1,17 +1,12 @@
 'use client';
+import { Category, Course } from '@/types/course';
 import { ClockIcon, BookOpenIcon, StarIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
-interface CourseData {
-  title: string;
-  institution: string;
-  categoryName: string;
-  students: number;
-  modulesCount: number;
-  duration: string;
-  rating: number;
+interface CourseData extends Course {
+  category: Category;
   reviews: number;
-  level: string;
+  students: number;
 }
 
 interface CourseOverviewProps {
@@ -24,18 +19,18 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ course, isPublic }) => 
     <div className="space-y-4">
       {/* Título do curso */}
       <h1 className="text-2xl font-bold text-gray-900">
-        {course.title}
+        {course.name}
       </h1>
 
       {/* Informações básicas */}
       <div className="flex items-center gap-2 text-sm text-gray-600 justify-between">
         <div className="flex items-center gap-2">
-          <span className="font-medium">{course.institution}</span>
-          <span>{course.categoryName}</span>
+          <span className="font-medium">{course?.institution?.name || 'Sem instituição'}</span>
+          <span>{course.category.name}</span>
         </div>
         <div className="flex items-center gap-1 min-w-0">
           <StarIcon className="w-4 h-4 text-yellow-400" fill='currentColor'/>
-          <span >{course.rating} ({course.reviews} Avaliações)</span>
+          <span >{course.rating} ({course?.reviews || 0} Avaliações)</span>
         </div>
       </div>
 
@@ -44,17 +39,17 @@ const CourseOverview: React.FC<CourseOverviewProps> = ({ course, isPublic }) => 
         <div className='flex items-center gap-6 min-w-0'>
           <div className="flex items-center gap-1">
             <UserIcon className="w-4 h-4"/>
-            <span>{course.students} Alunos</span>
+            <span>{course.students || 0} Alunos</span>
           </div>
 
           <div className="flex items-center gap-1">
             <BookOpenIcon className="w-4 h-4"/>
-            <span>{course.modulesCount} Módulos</span>
+            <span>{course.modulesCount || 0} Módulos</span>
           </div>
 
           <div className="flex items-center gap-1">
             <ClockIcon className="w-4 h-4"/>
-            <span>{course.duration}</span>
+            <span>{course.hours} horas</span>
           </div>
         </div>
         {isPublic && (

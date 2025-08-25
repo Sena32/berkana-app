@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { CourseModule, CourseModuleVideo } from '@/types/course';
+import { Course, CourseModule, CourseModuleVideo } from '@/types/course';
 
 interface Tab {
   id: string;
@@ -8,22 +8,10 @@ interface Tab {
   visible: boolean;
 }
 
-interface CourseDetailData {
-  id: string;
-  title: string;
-  institution: string;
-  categoryName: string;
+interface CourseDetailData extends Course {
   students: number;
-  modulesCount: number;
-  duration: string;
-  rating: number;
   reviews: number;
-  status: string;
-  description: string;
-  videoUrl?: string;
-  posterImage: string;
   thumbnail: string;
-  level: string;
   progress?: {
     completed: number;
     total: number;
@@ -64,7 +52,7 @@ const CourseTabs: React.FC<CourseTabsProps> = ({
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Descrição</h3>
-              <p className="text-gray-600 leading-relaxed">{courseData.description}</p>
+              <p className="text-gray-600 leading-relaxed">{courseData.description || 'Sem descrição'}</p>
             </div>
             
             <div>
@@ -138,7 +126,7 @@ const CourseTabs: React.FC<CourseTabsProps> = ({
                 <h4 className="font-medium text-gray-900 mb-3">Estrutura do curso</h4>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-gray-600 text-sm">
-                    Este curso contém <strong>{courseData.modulesCount}</strong> módulos organizados sequencialmente. 
+                    Este curso contém <strong>{courseData.modulesCount || 0}</strong> módulos organizados sequencialmente. 
                     Cada módulo pode conter vídeos, documentos e testes para garantir o aprendizado completo.
                   </p>
                 </div>
@@ -200,7 +188,7 @@ const CourseTabs: React.FC<CourseTabsProps> = ({
                   <svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto mb-4 text-green-600">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Certificado emitido por {courseData.institution}</h4>
+                  <h4 className="text-xl font-semibold text-gray-900 mb-2">Certificado emitido por {courseData?.institution?.name || 'Sem instituição'}</h4>
                   <p className="text-gray-600 mb-4">
                     Este certificado é emitido automaticamente após a conclusão de todos os módulos do curso.
                   </p>
@@ -221,19 +209,19 @@ const CourseTabs: React.FC<CourseTabsProps> = ({
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex justify-between">
                     <span>Instituição:</span>
-                    <span className="font-medium">{courseData.institution}</span>
+                    <span className="font-medium">{courseData?.institution?.name || 'Sem instituição'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Curso:</span>
-                    <span className="font-medium">{courseData.title}</span>
+                    <span className="font-medium">{courseData.name}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Duração:</span>
-                    <span className="font-medium">{courseData.duration}</span>
+                    <span className="font-medium">{courseData.hours} horas</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Módulos:</span>
-                    <span className="font-medium">{courseData.modulesCount}</span>
+                    <span className="font-medium">{courseData.modulesCount || 0}</span>
                   </div>
                 </div>
               </div>

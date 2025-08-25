@@ -64,7 +64,13 @@ export default function CoursesClient() {
             <Alert message={error} variant="error" />
           </div>
         ) : (
-          <CourseList courses={courses} />
+          <CourseList 
+          courses={courses}         
+          navigation={{
+            enabled: true,
+            baseUrl: "/cursos",
+            useRouter: false // Usar Link em vez de useRouter
+          }}/>
         )}
       </section>
       <TestimonialsCarousel />

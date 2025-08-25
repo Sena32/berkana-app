@@ -3,23 +3,53 @@ export enum CourseLevel {
   PAGO = 'PAGO',
 }
 
+export interface Instructor {
+  id: string;
+  name: string;
+  email?: string;
+  lastName?: string;
+  cpf?: string;
+  institution?: string;
+  profile?: string;
+  avatar?: string;
+  isActive?: boolean;
+}
+
+
+export interface Category {
+  id: string;
+  name: string;
+}
+
+export interface Institution {
+  id: string;
+  name: string;
+}
+
 export type Course = {
   id: string;
   name: string;
-  categoryName: string;
-  institution: string;
-  modulesCount: number;
-  hours: string;
-  rating?: number;
-  isActive: boolean;
-  isPublic: boolean;
+  description: string;
   thumbnail: string;
   image: string;
-  description: string;
+  institutionId: string;
+  categoryId: string;
+  unitCertification: string;
+  level: CourseLevel;
+  slug: string;
+  hours: string;
+  price: string;
+  instructorId: string;
+  isPublic: boolean;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
-  level: CourseLevel;
-  price: number;
+  instructor: Instructor;
+  category: Category;
+  institution: Institution;
+  modulesCount: number;
+  rating?: number;
+  reviews?: number;
 };
 
 export interface ListCoursesResponse {

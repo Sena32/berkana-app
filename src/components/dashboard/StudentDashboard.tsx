@@ -24,7 +24,6 @@ const StudentDashboard: React.FC = () => {
       // Adicionar progresso mockado para cursos em andamento
       const coursesWithMockProgress = coursesData.map((course, index) => ({
         ...course,
-        modulesCount: 3,
         progress: {
           completed: Math.floor(Math.random() * 3) + 1, // 1 a modulesCount
           total: 3,

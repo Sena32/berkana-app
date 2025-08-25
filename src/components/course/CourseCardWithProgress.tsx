@@ -3,22 +3,16 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Course } from '@/types/course';
+
 
 export interface CourseCardWithProgressProps {
-  id: string;
-  name: string;
-  institution: string;
-  rating: number;
-  modulesCount: number;
-  level: string;
-  categoryName: string;
-  thumbnail: string;
+  course: Course;
   progress?: {
     completed: number;
     total: number;
     percentage: number;
   };
-  image: string;
   progressColor?: 'green' | 'orange' | 'blue';
   certificateLink?: string;
   // Props de navegação
@@ -33,16 +27,8 @@ export interface CourseCardWithProgressProps {
 const fallbackImage = '/images/curso.svg';
 
 const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
-  id,
-  name,
-  institution,
-  level,
-  categoryName,
-  rating,
-  modulesCount,
+  course,
   progress,
-  thumbnail,
-  image,
   progressColor = 'green',
   certificateLink,
   navigation
@@ -50,8 +36,8 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
   const router = useRouter();
     
   // Usar a API route local em vez da URL HTTP direta
-  const imgSrc = thumbnail && thumbnail !== '' 
-    ? `/api/images/courses/thumbnail/${thumbnail}` 
+  const imgSrc = course.thumbnail && course.thumbnail !== '' 
+    ? `/api/images/courses/thumbnail/${course.thumbnail}` 
     : fallbackImage;
   const isCompleted = progress?.percentage === 100;
   
@@ -71,12 +57,12 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
     if (!navigation?.enabled) return;
 
     if (navigation.onClick) {
-      navigation.onClick(id);
+      navigation.onClick(course.id);
       return;
     }
 
     if (navigation.useRouter) {
-      const url = navigation.baseUrl ? `${navigation.baseUrl}/${id}` : `/aluno/cursos/${id}`;
+      const url = navigation.baseUrl ? `${navigation.baseUrl}/${course.id}` : `/aluno/cursos/${course.id}`;
       router.push(url);
       return;
     }
@@ -88,7 +74,7 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
       <div className="relative w-full h-32">
         <Image
           src={imgSrc}
-          alt={`Curso ${name}`}
+          alt={`Curso ${course.name}`}
           unoptimized={true}
           fill
           className="object-cover"
@@ -101,24 +87,24 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
       <div className="p-4">
         {/* Título */}
         <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-          {name}
+          {course.name}
         </h3>
         
         {/* Instituição */}
         <div className="flex items-center gap-2 mb-3">
           <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
-          <span className="text-xs text-gray-600">{institution || 'Não informado'}</span>
+          <span className="text-xs text-gray-600">{course.institution?.name || 'Não informado'}</span>
         </div>
         
         {/* Rating */}
-        {rating ? (
+        {course.rating ? (
         <div className="flex items-center gap-1 mb-3">
           <div className="flex text-yellow-400">
             <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
           </div>
-          <span className="text-xs text-gray-600">{rating}</span>
+          <span className="text-xs text-gray-600">{course.rating} ({course.reviews || 0} Avaliações)</span>
         </div>
           ):(
           <div className="flex items-center gap-1 mb-3">
@@ -130,7 +116,7 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
         {progress && (
           <div className="mb-3">
             <div className="flex justify-between text-xs text-gray-600 mb-1">
-              <span>{progress.completed}/{modulesCount} Módulos</span>
+              <span>{progress.completed}/{course.modulesCount || 0 } Módulos</span>
               <span>{progress.percentage}%</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
@@ -160,7 +146,7 @@ const CourseCardWithProgress: React.FC<CourseCardWithProgressProps> = ({
   // Se a navegação está habilitada mas não usa router, usar Link
   if (navigation?.enabled && !navigation.useRouter && navigation.baseUrl) {
     return (
-      <Link href={`${navigation.baseUrl}/${id}`} className="block">
+      <Link href={`${navigation.baseUrl}/${course.id}`} className="block">
         {cardContent}
       </Link>
     );

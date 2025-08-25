@@ -52,12 +52,12 @@ const ExploreCoursesPage: React.FC = () => {
   const filteredCourses = courses.filter(course => {
     const matchesSearch = 
       course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.institution.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.institution?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       course.description.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory = selectedCategory === 'all' || 
-      (selectedCategory === 'senasp' && course.institution.toLowerCase().includes('senasp')) ||
-      (selectedCategory === 'berkana' && course.institution.toLowerCase().includes('berkana')) ||
+      (selectedCategory === 'senasp' && course.institution?.name.toLowerCase().includes('senasp')) ||
+      (selectedCategory === 'berkana' && course.institution?.name.toLowerCase().includes('berkana')) ||
       (selectedCategory === 'language' && course.description.toLowerCase().includes('linguagem')) ||
       (selectedCategory === 'investigation' && course.description.toLowerCase().includes('investigação')) ||
       (selectedCategory === 'rescue' && course.description.toLowerCase().includes('resgate')) ||

@@ -4,24 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import TruncatedText from '@/components/ui/TruncatedText';
-import { formatCurrency } from '@/lib/utils';
-import { BookOpenIcon, BuildingOffice2Icon, BuildingOfficeIcon, ClockIcon, StarIcon } from '@heroicons/react/24/outline';
+import { BookOpenIcon, BuildingOffice2Icon, ClockIcon, StarIcon } from '@heroicons/react/24/outline';
+import { Course } from '@/types/course';
 
 export interface CourseCardProps {
-  id: string;
-  name: string;
-  institution: string;
-  modules?: number;
-  hours: string;
-  rating?: number;
-  isActive: boolean;
-  thumbnail: string;
-  image: string;
-  description: string;
-  categoryName: string;
-  modulesCount: number;
-  level: string;
-  price?: number;
+  course: Course;
   // Props de navegação
   navigation?: {
     enabled: boolean;
@@ -36,40 +23,27 @@ export interface CourseCardProps {
 const fallbackImage = '/images/curso.svg';
 
 const CourseCard: React.FC<CourseCardProps> = ({
-  id, 
-  name, 
-  institution, 
-  modules, 
-  hours, 
-  rating, 
-  isActive, 
-  thumbnail, 
-  image, 
-  description, 
-  categoryName,
-  level,
+  course,
   navigation,
-  status,
-  modulesCount,
-  price
+  status
 }) => {
   const router = useRouter();
   
   // Usar a API route local em vez da URL HTTP direta
-  const imgSrc = thumbnail && thumbnail !== '' 
-    ? `/api/images/courses/thumbnail/${thumbnail}` 
+  const imgSrc = course.thumbnail && course.thumbnail !== '' 
+    ? `/api/images/courses/thumbnail/${course.thumbnail}` 
     : fallbackImage;
 
   const handleClick = () => {
     if (!navigation?.enabled) return;
 
     if (navigation.onClick) {
-      navigation.onClick(id);
+      navigation.onClick(course.id);
       return;
     }
 
     if (navigation.useRouter) {
-      const url = navigation.baseUrl ? `${navigation.baseUrl}/${id}` : `/aluno/cursos/${id}`;
+      const url = navigation.baseUrl ? `${navigation.baseUrl}/${course.id}` : `/aluno/cursos/${course.id}`;
       router.push(url);
       return;
     }
@@ -105,7 +79,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       <div className="relative w-full h-36">
         <Image
           src={imgSrc}
-          alt={`Curso ${name}`}
+          alt={`Curso ${course.name}`}
           unoptimized={true}
           fill
           className="rounded-lg object-cover"
@@ -119,7 +93,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       <div className="flex items-start w-full">
         <div className="min-w-0 flex-1">
           <TruncatedText
-            text={name}
+            text={course.name}
             maxLength={50}
             className="font-semibold text-[#141522] leading-tight block w-full"
             tooltipPosition="top"
@@ -130,7 +104,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       {/* Categoria - truncada */}
       <div className="w-full">
         <TruncatedText
-          text={categoryName || 'Sem categoria'}
+          text={course.category?.name || 'Sem categoria'}
           maxLength={25}
           className="text-[#04A4F4] text-xs font-medium w-full"
           tooltipPosition="top"
@@ -141,7 +115,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
       <div className="flex items-center gap-2 justify-between">
         <div className="min-w-0">
           <TruncatedText
-            text={level}
+            text={course.level}
             className="text-[#9C9CA4] text-xs w-full"
             tooltipPosition="top"
           />
@@ -152,7 +126,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
             <StarIcon className="w-4 h-4" fill='currentColor'/>
           </span>
           <TruncatedText
-            text={rating ? rating.toString() : 'Não avaliado'}
+            text={course.rating ? course.rating.toString() : 'Não avaliado'}
             className="text-[#141522] text-xs"
             tooltipPosition="top"
           />
@@ -167,7 +141,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </span>
           <div className="min-w-0 flex-1">
             <TruncatedText
-              text={institution}
+              text={course.institution?.name || 'Instituição não informada'}
               className="text-[#4B587C] text-xs block w-full"
               tooltipPosition="top"
             />
@@ -181,8 +155,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </span>
           <div className="min-w-0 flex-1">
             <TruncatedText
-              text={modulesCount ? `${modulesCount} Modulos` : 'Sem Módulos'}
-              className="text-[#4B587C] text-xs block w-full"
+              text={course.modulesCount ? `${course.modulesCount} Modulos` : 'Sem Módulos'}
+              className="text-[#9C9CA4] text-xs block w-full"
               tooltipPosition="top"
             />
           </div>
@@ -195,8 +169,8 @@ const CourseCard: React.FC<CourseCardProps> = ({
           </span>
           <div className="min-w-0 flex-1">
             <TruncatedText
-              text={hours}
-              className="text-[#4B587C] text-xs block w-full"
+              text={course.hours}
+              className="text-[#9C9CA4] text-xs block w-full"
               tooltipPosition="top"
             />
           </div>
@@ -208,7 +182,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   // Se a navegação está habilitada mas não usa router, usar Link
   if (navigation?.enabled && !navigation.useRouter && navigation.baseUrl) {
     return (
-      <Link href={`${navigation.baseUrl}/${id}`} className="block">
+      <Link href={`${navigation.baseUrl}/${course.id}`} className="block">
         {cardContent}
       </Link>
     );

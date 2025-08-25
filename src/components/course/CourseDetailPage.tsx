@@ -8,26 +8,14 @@ import CourseTabs from './CourseTabs';
 import CourseProgressSidebar from './CourseProgressSidebar';
 import { useCourseDetail } from '@/hooks/useCourseDetail';
 import { useRouter } from 'next/navigation';
-import { CourseModule, CourseModuleVideo } from '@/types/course';
+import { Course, CourseModule, CourseModuleVideo } from '@/types/course';
 import CourseVideoPlayerSimple from './CourseVideoPlayerSimple';
 
-interface CourseDetailData {
-  id: string;
-  title: string;
-  institution: string;
-  categoryName: string;
+interface CourseDetailData extends Course {
   students: number;
-  modulesCount: number;
-  duration: string;
   rating: number;
+  videoUrl: string;
   reviews: number;
-  status: string;
-  description: string;
-  videoUrl?: string;
-  posterImage: string;
-  thumbnail: string;
-  level: string;
-  price: number;
   progress?: {
     completed: number;
     total: number;
@@ -298,7 +286,7 @@ const CourseDetailPage: React.FC<CourseDetailPageProps> = ({
             <div className="relative w-full h-64 rounded-lg overflow-hidden">
               <Image
                 src={courseData.thumbnail || '/images/curso.svg'}
-                alt={courseData.title}
+                alt={courseData.name}
                 fill
                 className="object-cover"
               />

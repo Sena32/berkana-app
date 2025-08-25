@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CourseViewModel } from '@/viewmodels/course/CourseViewModel';
 import { EnrollmentViewModel } from '@/viewmodels/enrollment/EnrollmentViewModel';
-import { CourseModule, CourseModuleVideo } from '@/types/course';
+import { Course, CourseModule, CourseModuleVideo } from '@/types/course';
 import { Enrollment } from '@/types/enrollment';
 
 interface UseCourseDetailOptions {
@@ -10,23 +10,11 @@ interface UseCourseDetailOptions {
   autoLoad?: boolean;
 }
 
-interface CourseDetailData {
-  id: string;
-  title: string;
-  institution: string;
-  categoryName: string;
-  students: number;
-  modulesCount: number;
-  duration: string;
+interface CourseDetailData extends Course {
   rating: number;
+  videoUrl: string;
+  students: number;
   reviews: number;
-  status: string;
-  description: string;
-  videoUrl?: string;
-  posterImage: string;
-  thumbnail: string;
-  level: string;
-  price: number;
   progress?: {
     completed: number;
     total: number;
@@ -51,7 +39,7 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
     
     try {
       const course = await CourseViewModel.getInstance().getCourseById(courseId);
-
+      console.log('course', course);
       // Usar a API route local em vez da URL HTTP direta
       const thumbnail = course.thumbnail && course.thumbnail !== '' 
         ? `/api/images/courses/thumbnail/${course.thumbnail}` 
@@ -59,28 +47,20 @@ export const useCourseDetail = ({ courseId, moduleId, autoLoad = false }: UseCou
       
       // Transformar os dados da API para o formato esperado pelo componente
       const transformedData: CourseDetailData = {
-        id: course.id,
-        title: course.name,
-        institution: course.institution,
-        categoryName: course.categoryName,
-        students: 0, // TODO: Implementar quando a API retornar
-        modulesCount: course.modulesCount || 0,
-        duration: course.hours,
+        ...course,
+        students:  0,
+        reviews: 0,
         rating: course.rating || 0,
-        reviews: 0, // TODO: Implementar quando a API retornar
-        level: course.level,
-        description: course.description,
-        posterImage: course.image,
+        videoUrl: '',
         thumbnail: thumbnail,
-        price: course.price,
         progress: {
           completed: 0,
           total: course.modulesCount || 0,
           percentage: 0
-        },
-        status: 'Ativo'
+        }
       };
-      
+
+      console.log('transformedData', transformedData);
       setCourseData(transformedData);
 
       // Carregar módulos do curso

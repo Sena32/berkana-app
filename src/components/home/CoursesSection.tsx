@@ -2,9 +2,10 @@ import React from 'react';
 import CourseList from '@/components/course/CourseList';
 import { mockCourses } from '@/mocks/course-mock';
 import Link from '../common/Link';
+import { Course } from '@/types/course';
 
 interface CoursesSectionProps {
-  courses?: any[]; // Tipar corretamente depois
+  courses?: Course[];
 }
 
 const CoursesSection: React.FC<CoursesSectionProps> = ({ courses }) => {

@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import CourseCard, { CourseCardProps } from './CourseCard';
 import CourseCardWithProgress, { CourseCardWithProgressProps } from './CourseCardWithProgress';
+import { Course } from '@/types/course';
 
 // Tipo para cursos com progresso opcional
-export interface CourseWithOptionalProgress extends Omit<CourseCardProps, 'id'> {
-  id: string;
+export interface CourseWithOptionalProgress extends Course {
   progress?: {
     completed: number;
     total: number;
@@ -25,7 +25,7 @@ export interface NavigationConfig {
 }
 
 interface CourseListProps {
-  courses: (CourseCardProps | CourseCardWithProgressProps | CourseWithOptionalProgress)[];
+  courses: (Course | CourseWithOptionalProgress)[];
   title?: string;
   showPagination?: boolean;
   cardType?: CardType;
@@ -59,33 +59,45 @@ const CourseList: React.FC<CourseListProps> = ({
     setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
   };
 
-  const renderCard = (course: CourseCardProps | CourseCardWithProgressProps | CourseWithOptionalProgress, index: number) => {
+  const renderCard = (course: Course | CourseWithOptionalProgress, index: number) => {
     if (cardType === 'withProgress') {
       // Se o curso tem progresso, usar CourseCardWithProgress
       if ('progress' in course && course.progress) {
+        const courseWithProgress: CourseCardWithProgressProps = {
+          course,
+          progress: course.progress,
+          progressColor: course.progressColor,
+          navigation
+        };
         return (
           <CourseCardWithProgress 
             key={course.id} 
-            {...(course as CourseCardWithProgressProps)}
-            navigation={navigation}
+            {...courseWithProgress}
           />
         );
       }
       // Se não tem progresso, usar CourseCard normal
+      const courseCardProps: CourseCardProps = {
+        course,
+        navigation
+      };
       return (
         <CourseCard 
           key={course.id} 
-          {...(course as CourseCardProps)}
-          navigation={navigation}
+          {...courseCardProps}
         />
       );
     }
     
+    const courseCardProps: CourseCardProps = {
+      course,
+      navigation
+    };
+    
     return (
       <CourseCard 
         key={course.id} 
-        {...(course as CourseCardProps)}
-        navigation={navigation}
+        {...courseCardProps}
       />
     );
   };
